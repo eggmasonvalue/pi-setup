@@ -116,7 +116,7 @@ const TodoParams = Type.Object({
 		Type.String({ description: "Long-form details (markdown). Update replaces; append adds." }),
 	),
 	parent_id: Type.Optional(
-		Type.String({ description: "Parent todo id (for subtasks)" }),
+		Type.String({ description: "Parent todo id. Set on create/update to make this todo a subtask." }),
 	),
 	force: Type.Optional(Type.Boolean({ description: "Override another session's assignment" })),
 });
@@ -1544,9 +1544,10 @@ export default function todosExtension(pi: ExtensionAPI) {
 		label: "Todo",
 		description:
 			`Manage file-based todos in ${todosDirLabel} (list, list-all, get, create, update, append, delete, claim, release). ` +
+			"Use `parent_id` on create/update to create or re-parent subtasks. " +
 			"Title is the short summary; body is long-form markdown notes (update replaces, append adds). " +
-			"Todo ids are shown as TODO-<hex>; id parameters accept TODO-<hex> or the raw hex filename. " +
-			"Claim tasks before working on them to avoid conflicts, and close them when complete.", 
+			"Todo ids are shown as TODO-<hex>; id parameters accept TODO-<hex> or raw hex. " +
+			"Claim tasks before working on them; close when complete.",
 		parameters: TodoParams,
 
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {

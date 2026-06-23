@@ -860,21 +860,17 @@ export default function (pi: ExtensionAPI) {
 	const { policy: registrationPolicy } = loadModelPolicy();
 	const defaultModelNote =
 		registrationPolicy.enabled && registrationPolicy.defaultModel
-			? ` Default child model: ${registrationPolicy.defaultModel} (allowlist active; call with {listModels:true} to see options).`
-			: " Call with {listModels:true} to see allowed child models and the default.";
+			? ` Default child model: ${registrationPolicy.defaultModel}.`
+			: "";
 	pi.registerTool({
 		name: "subagent",
 		label: "Subagent",
 		description: [
-			"Delegate a task to a subagent running in an isolated context (separate pi process).",
-			"Provide `task` plus optional inline `systemPrompt`, `model`, `thinking`, and `tools`. Named agents are optional, not required.",
-			"Modes: single (task), parallel (tasks array), chain (sequential with {previous} placeholder).",
-			"Resume an interrupted/aborted child with {resume:<session>, task:<steer>}; bound a run with {timeoutMs}.",
-			"On abort/timeout, completed tasks still return their output and every task keeps its session path (per-task status: done/failed/timeout/aborted/never-started).",
-			"Each result is prefixed with a terse [key=value] envelope (status, model, label, session); the child's own output follows verbatim.",
-			"Optional model allowlist: ~/.pi/agent/extensions/subagent/models-allowlist.json (exact model strings, optional default).",
-			"Each subagent's full transcript is persisted; the session file path is returned so you can read it to verify or debug." +
-				defaultModelNote,
+			"Delegate work to an isolated child pi process.",
+			"Modes: single (`task`), parallel (`tasks[]`), chain (`chain[]` with `{previous}`).",
+			"Resume with `{resume:<session>, task:<steer>}`; limit runtime with `{timeoutMs}`.",
+			"Results include status/model/label/session; transcript session paths are persisted for inspection.",
+			"Use `{listModels:true}` to view allowed models and default." + defaultModelNote,
 		].join(" "),
 		parameters: SubagentParams,
 
