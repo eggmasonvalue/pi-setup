@@ -1,0 +1,15 @@
+{
+  "eval_id": 2,
+  "eval_name": "lmm-sheet-json-dump-baseline",
+  "prompt": "Give me all parameters from the LMM Parameters sheet in the Parameters.xlsm as JSON so I can quickly scan them.",
+  "assertions": [
+    {
+      "text": "Output is valid JSON",
+      "check": "output is parseable JSON"
+    },
+    {
+      "text": "JSON contains pLMMFuncEnable",
+      "check": "JSON has pLMMFuncEnable"
+    }
+  ]
+}

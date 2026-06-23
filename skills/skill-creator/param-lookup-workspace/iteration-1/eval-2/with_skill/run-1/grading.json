@@ -1,0 +1,25 @@
+{
+  "run_id": "eval-2-with_skill",
+  "assertions": [
+    {
+      "text": "Output is valid JSON",
+      "passed": true,
+      "evidence": "Output file is 125KB of well-formed JSON (625 parameter entries verified parseable)"
+    },
+    {
+      "text": "JSON contains pLMMFuncEnable with value 0",
+      "passed": true,
+      "evidence": "First entry in output is pLMMFuncEnable with value:0"
+    },
+    {
+      "text": "Uses --json and --sheet flags on get_param.py",
+      "passed": true,
+      "evidence": "Agent invoked --all --json --sheet 'LMM Parameters'"
+    },
+    {
+      "text": "Multiple LMM parameters present (more than 5 entries)",
+      "passed": true,
+      "evidence": "625 entries returned"
+    }
+  ]
+}

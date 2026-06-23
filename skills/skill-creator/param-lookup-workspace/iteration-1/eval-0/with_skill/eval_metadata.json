@@ -1,0 +1,23 @@
+{
+  "eval_id": 0,
+  "eval_name": "lmm-func-enable-lookup",
+  "prompt": "I'm debugging CDD_RegulatorManager.c and I see Get_pLMMFuncEnable used everywhere in #if CONFIG_LIGHTCONTROL guards. What is its configured value and what does it control?",
+  "assertions": [
+    {
+      "text": "Response correctly identifies the value as 0",
+      "check": "output contains '= 0' or 'value: 0' or 'value is 0'"
+    },
+    {
+      "text": "Response identifies the sheet source (Parameters or LMM Parameters)",
+      "check": "output mentions 'Parameters' sheet"
+    },
+    {
+      "text": "Response includes the human-readable description about LMM functionality",
+      "check": "output mentions 'LMM' and 'functionality' or 'available'"
+    },
+    {
+      "text": "Response uses the param-lookup script (not grep or manual search)",
+      "check": "output shows get_param.py was invoked"
+    }
+  ]
+}

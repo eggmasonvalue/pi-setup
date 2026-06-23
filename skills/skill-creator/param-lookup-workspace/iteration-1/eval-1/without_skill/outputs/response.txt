@@ -1,0 +1,13 @@
+In `pkg\appl\library\Parameters\Parameters_Excel_File\Parameters.xlsm`, sheet `Parameters`, the values are:
+- pLedRamp#1 = 100
+- pLedRamp#2 = 800
+- pLedRamp#3 = 2700
+- pLedRamp#4 = 6400
+
+Source cells:
+- pLedRamp#1: K5 (Default also L5 = 100)
+- pLedRamp#2: K6 (Default also L6 = 800)
+- pLedRamp#3: K7 (Default also L7 = 2700)
+- pLedRamp#4: K8 (Default also L8 = 6400)
+
+These entries are in parameter group `S_RampParameters` and are labeled `Beam Shape Ramp`.

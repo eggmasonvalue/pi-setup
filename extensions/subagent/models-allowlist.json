@@ -1,0 +1,10 @@
+{
+  "enabled": true,
+  "allowed": [
+    "github-copilot/gpt-5.3-codex",
+    "github-copilot/gpt-5.4",
+    "github-copilot/gpt-5.5",
+    "github-copilot/claude-opus-4.8"
+  ],
+  "default": "github-copilot/gpt-5.3-codex"
+}

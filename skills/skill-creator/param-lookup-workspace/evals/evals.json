@@ -1,0 +1,23 @@
+{
+  "skill_name": "param-lookup",
+  "evals": [
+    {
+      "id": 0,
+      "prompt": "I'm debugging CDD_RegulatorManager.c and I see Get_pLMMFuncEnable used everywhere in #if CONFIG_LIGHTCONTROL guards. What is its configured value and what does it control?",
+      "expected_output": "Retrieves value=0 for pLMMFuncEnable from Parameters.xlsm with description about LMM functionality, showing both sheet hits",
+      "files": []
+    },
+    {
+      "id": 1,
+      "prompt": "What are the values of pLedRamp#1, pLedRamp#2, pLedRamp#3, and pLedRamp#4 in the main parameter sheet? I need to understand the ramp profile.",
+      "expected_output": "Returns all 4 ramp values (100, 800, 2700, 6400) with units and descriptions from the Parameters sheet",
+      "files": []
+    },
+    {
+      "id": 2,
+      "prompt": "Give me all parameters from the LMM Parameters sheet in the Parameters.xlsm as JSON so I can quickly scan them.",
+      "expected_output": "JSON dump of all LMM Parameters sheet entries using --json --sheet 'LMM Parameters' --all flags",
+      "files": []
+    }
+  ]
+}

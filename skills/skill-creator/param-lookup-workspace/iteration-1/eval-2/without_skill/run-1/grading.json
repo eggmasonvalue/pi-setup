@@ -1,0 +1,15 @@
+{
+  "run_id": "eval-2-without_skill",
+  "assertions": [
+    {
+      "text": "Output is valid JSON",
+      "passed": true,
+      "evidence": "Agent wrote its own openpyxl extraction script and produced valid JSON"
+    },
+    {
+      "text": "JSON contains pLMMFuncEnable",
+      "passed": true,
+      "evidence": "Agent found pLMMFuncEnable in its custom extraction"
+    }
+  ]
+}

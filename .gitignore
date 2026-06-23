@@ -1,0 +1,10 @@
+# secrets/runtime state
+auth.json
+sessions/
+.pi/
+npm/
+node_modules/
+
+# misc
+.DS_Store
+Thumbs.db

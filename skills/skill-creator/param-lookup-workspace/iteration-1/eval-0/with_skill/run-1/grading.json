@@ -1,0 +1,25 @@
+{
+  "run_id": "eval-0-with_skill",
+  "assertions": [
+    {
+      "text": "Response correctly identifies the value as 0",
+      "passed": true,
+      "evidence": "Response states 'Get_pLMMFuncEnable = 0' explicitly"
+    },
+    {
+      "text": "Response identifies the sheet source (Parameters or LMM Parameters)",
+      "passed": true,
+      "evidence": "Response lists both 'Sheet: Parameters' and 'Sheet: LMM Parameters'"
+    },
+    {
+      "text": "Response includes the human-readable description about LMM functionality",
+      "passed": true,
+      "evidence": "Includes 'Select if LMM Functionality is available or Not' and interprets LMM runtime gating"
+    },
+    {
+      "text": "Response uses the param-lookup script (not grep or manual search)",
+      "passed": true,
+      "evidence": "Response explicitly notes it used the param-lookup skill's script"
+    }
+  ]
+}
