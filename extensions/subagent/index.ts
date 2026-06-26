@@ -153,6 +153,8 @@ interface SingleResult {
 	label?: string;
 	/** True when this item was a resume of an existing session rather than a fresh run. */
 	resumed?: boolean;
+	thinking?: string;
+	timeoutMs?: number;
 	exitCode: number;
 	messages: Message[];
 	stderr: string;
@@ -181,15 +183,22 @@ interface ResolvedSpec {
 	systemPrompt: string;
 }
 
+interface ModelAllowlistEntry {
+	id: string;
+	[key: string]: unknown;
+}
+
 interface ModelAllowlistConfig {
 	enabled?: boolean;
-	allowed?: string[];
+	allowed?: (string | ModelAllowlistEntry)[];
 	default?: string;
 }
 
 interface ModelPolicy {
 	enabled: boolean;
 	allowed: Set<string>;
+	/** Raw metadata objects keyed by model id, for models defined as objects in the allowlist. */
+	metadata: Map<string, ModelAllowlistEntry>;
 	defaultModel?: string;
 	configPath: string;
 }
@@ -203,6 +212,7 @@ function loadModelPolicy(): { policy: ModelPolicy; error?: string } {
 	const basePolicy: ModelPolicy = {
 		enabled: false,
 		allowed: new Set<string>(),
+		metadata: new Map<string, ModelAllowlistEntry>(),
 		defaultModel: undefined,
 		configPath,
 	};
@@ -228,17 +238,28 @@ function loadModelPolicy(): { policy: ModelPolicy; error?: string } {
 		return { policy: basePolicy, error: `"enabled" must be boolean in ${configPath}` };
 	}
 	if (config.allowed !== undefined && !Array.isArray(config.allowed)) {
-		return { policy: basePolicy, error: `"allowed" must be an array of model strings in ${configPath}` };
+		return { policy: basePolicy, error: `"allowed" must be an array of model strings or objects in ${configPath}` };
 	}
 	if (config.default !== undefined && typeof config.default !== "string") {
 		return { policy: basePolicy, error: `"default" must be a model string in ${configPath}` };
 	}
 
+	const metadata = new Map<string, ModelAllowlistEntry>();
 	const allowed = new Set(
-		(config.allowed ?? [])
-			.filter((m): m is string => typeof m === "string")
-			.map((m) => m.trim())
-			.filter(Boolean),
+		(config.allowed ?? []).flatMap((entry) => {
+			if (typeof entry === "string") {
+				const id = entry.trim();
+				return id ? [id] : [];
+			}
+			if (entry && typeof entry === "object" && typeof entry.id === "string") {
+				const id = entry.id.trim();
+				if (id) {
+					metadata.set(id, entry);
+					return [id];
+				}
+			}
+			return [];
+		}),
 	);
 	const enabled = config.enabled ?? true;
 	const defaultModel = config.default?.trim() || undefined;
@@ -257,9 +278,31 @@ function loadModelPolicy(): { policy: ModelPolicy; error?: string } {
 		policy: {
 			enabled,
 			allowed,
+			metadata,
 			defaultModel,
 			configPath,
 		},
+	};
+}
+
+function compactModelValue(value: unknown): unknown {
+	return Array.isArray(value) ? value.join("|") : value;
+}
+
+function compactModelList(policy: ModelPolicy): { columns: string[]; models: unknown[][] } {
+	const columns: string[] = [];
+	const addColumn = (key: string) => {
+		if (!columns.includes(key)) columns.push(key);
+	};
+
+	const entries = Array.from(policy.allowed).map((id) => policy.metadata.get(id) ?? { id });
+	for (const entry of entries) {
+		for (const key of Object.keys(entry)) addColumn(key);
+	}
+
+	return {
+		columns,
+		models: entries.map((entry) => columns.map((key) => compactModelValue(entry[key] ?? null))),
 	};
 }
 
@@ -355,8 +398,8 @@ type RunOpts = { resume?: string; timeoutMs?: number; label?: string };
 
 /**
  * Resolve an item into a runnable spec + per-run opts. Resume bypasses spec
- * resolution (model/tools/systemPrompt are fixed by the original session) and is
- * mutually exclusive with those fields.
+ * resolution. Runtime-affecting params stay fixed by the original session for
+ * provider prefix-cache compatibility.
  */
 function resolveRunPlan(
 	agents: AgentConfig[],
@@ -369,14 +412,25 @@ function resolveRunPlan(
 		label: item.label,
 	};
 	if (opts.resume) {
-		if (item.agent || item.systemPrompt || item.model || (item.tools && item.tools.length > 0)) {
-			return { opts, error: "resume is mutually exclusive with agent/systemPrompt/model/tools." };
+		if (
+			item.agent ||
+			item.systemPrompt ||
+			item.model ||
+			item.thinking ||
+			item.cwd ||
+			(item.tools && item.tools.length > 0)
+		) {
+			return {
+				opts,
+				error:
+					"resume only accepts resume/task/timeoutMs/label; runtime config is fixed by the child session for cache-compatible continuation.",
+			};
 		}
 		if (!item.task || !item.task.trim()) {
 			return { opts, error: "resume requires a continuation `task` (the steering prompt for the resumed session)." };
 		}
 		return {
-			spec: { name: "resume", source: "inline", thinking: item.thinking, systemPrompt: "" },
+			spec: { name: "resume", source: "inline", systemPrompt: "" },
 			opts,
 		};
 	}
@@ -398,7 +452,7 @@ function tallyStatuses(results: SingleResult[]): string {
 function unfinishedNote(results: SingleResult[]): string {
 	const stuck = results.filter((r) => r.stopReason === "aborted" || r.stopReason === "timeout");
 	if (stuck.length === 0) return "";
-	return `\n\nNote: ${stuck.length} task(s) did not finish. Their partial output + session path are above; inspect the JSONL and continue with subagent { resume: <session>, task: <steer> }.`;
+	return `\n\nNote: ${stuck.length} task(s) did not finish. Resume with the exact JSONL path shown in that task's session= field: subagent { resume: <session-jsonl-path>, task: <steer> }.`;
 }
 
 function sessionFooter(result: SingleResult): string {
@@ -414,6 +468,32 @@ function resolveSessionFile(sessionDir: string, result: SingleResult): void {
 	} catch {
 		/* ignore */
 	}
+}
+
+function expandHome(inputPath: string): string {
+	if (inputPath === "~") return os.homedir();
+	if (inputPath.startsWith("~/") || inputPath.startsWith("~\\")) {
+		return path.join(os.homedir(), inputPath.slice(2));
+	}
+	return inputPath;
+}
+
+function resolveResumeSessionPath(inputPath: string): { path?: string; error?: string } {
+	const expanded = expandHome(inputPath.trim());
+	if (!path.isAbsolute(expanded)) {
+		return { error: "resume must be the exact child session JSONL path from a previous result's `session=` field." };
+	}
+	const resolved = path.resolve(expanded);
+	if (path.extname(resolved) !== ".jsonl") {
+		return { error: "resume must be the exact child session JSONL path from a previous result's `session=` field." };
+	}
+	try {
+		const stat = fs.statSync(resolved);
+		if (!stat.isFile()) return { error: `resume path is not a file: ${resolved}` };
+	} catch {
+		return { error: `resume session file not found: ${resolved}` };
+	}
+	return { path: resolved };
 }
 
 interface SubagentDetails {
@@ -468,6 +548,8 @@ function buildEnvelope(result: SingleResult): string {
 	parts.push(`status=${statusOf(result)}`);
 	if (result.step) parts.push(`step=${result.step}`);
 	if (result.model) parts.push(`model=${result.model}`);
+	if (result.thinking) parts.push(`thinking=${result.thinking}`);
+	if (result.timeoutMs) parts.push(`timeoutMs=${result.timeoutMs}`);
 	if (result.usage.turns) parts.push(`turns=${result.usage.turns}`);
 	if (result.usage.cost) parts.push(`cost=${result.usage.cost.toFixed(4)}`);
 	parts.push(`exit=${result.stopReason ?? "end"}`);
@@ -594,7 +676,18 @@ async function runSingleAgent(
 	makeDetails: (results: SingleResult[]) => SubagentDetails,
 	opts?: { resume?: string; timeoutMs?: number; label?: string },
 ): Promise<SingleResult> {
-	const resumePath = opts?.resume?.trim() || undefined;
+	const resumeInput = opts?.resume?.trim() || undefined;
+	const resumeResolution: { path?: string; error?: string } = resumeInput
+		? resolveResumeSessionPath(resumeInput)
+		: {};
+	if (resumeResolution.error) {
+		const failed = failedSpecResult(spec.name, task, step, resumeResolution.error);
+		failed.label = opts?.label;
+		failed.resumed = Boolean(resumeInput);
+		failed.timeoutMs = opts?.timeoutMs;
+		return failed;
+	}
+	const resumePath = resumeResolution.path;
 	// Persist the child's session so the main agent can read the full transcript
 	// for debugging. This is the observability bridge: a path, not a framework.
 	const runId = `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
@@ -607,14 +700,13 @@ async function runSingleAgent(
 		}
 	}
 
-	// Resume continues the *same* session (appends turns) via --session; a fresh
-	// run gets its own --session-dir. Resume ignores model/tools/systemPrompt
-	// (fixed by the original session) but still honors thinking/cwd/timeout.
+	// Resume continues the exact session file via --session. Runtime-affecting
+	// options are not passed on resume; the session owns that state.
 	const args: string[] = ["--mode", "json", "-p"];
 	if (resumePath) args.push("--session", resumePath);
 	else args.push("--session-dir", sessionDir);
 	if (!resumePath && spec.model) args.push("--model", spec.model);
-	if (spec.thinking) args.push("--thinking", spec.thinking);
+	if (!resumePath && spec.thinking) args.push("--thinking", spec.thinking);
 	if (!resumePath && spec.tools && spec.tools.length > 0) args.push("--tools", spec.tools.join(","));
 
 	let tmpPromptDir: string | null = null;
@@ -631,6 +723,8 @@ async function runSingleAgent(
 		stderr: "",
 		usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0, contextTokens: 0, turns: 0 },
 		model: resumePath ? undefined : spec.model,
+		thinking: resumePath ? undefined : spec.thinking,
+		timeoutMs: opts?.timeoutMs,
 		step,
 	};
 	// For a resume we already know which session is being continued; surface it
@@ -794,7 +888,7 @@ const TaskItem = Type.Object({
 	resume: Type.Optional(
 		Type.String({
 			description:
-				"Resume an existing child session (path or partial id) and append `task` as the next turn. Mutually exclusive with agent/systemPrompt/model/tools.",
+				"Exact child session JSONL path from a previous result's session= field. Appends `task`; only timeoutMs/label may vary.",
 		}),
 	),
 	timeoutMs: Type.Optional(
@@ -814,7 +908,7 @@ const ChainItem = Type.Object({
 	resume: Type.Optional(
 		Type.String({
 			description:
-				"Resume an existing child session (path or partial id) and append `task` as the next turn. Mutually exclusive with agent/systemPrompt/model/tools.",
+				"Exact child session JSONL path from a previous result's session= field. Appends `task`; only timeoutMs/label may vary.",
 		}),
 	),
 	timeoutMs: Type.Optional(
@@ -838,7 +932,7 @@ const SubagentParams = Type.Object({
 	resume: Type.Optional(
 		Type.String({
 			description:
-				"Resume an existing child session (path or partial id) and append `task` as the next turn (single mode). Mutually exclusive with agent/systemPrompt/model/tools.",
+				"Exact child session JSONL path from a previous result's session= field. Appends `task`; only timeoutMs/label may vary.",
 		}),
 	),
 	timeoutMs: Type.Optional(
@@ -857,20 +951,14 @@ const SubagentParams = Type.Object({
 });
 
 export default function (pi: ExtensionAPI) {
-	const { policy: registrationPolicy } = loadModelPolicy();
-	const defaultModelNote =
-		registrationPolicy.enabled && registrationPolicy.defaultModel
-			? ` Default child model: ${registrationPolicy.defaultModel}.`
-			: "";
 	pi.registerTool({
 		name: "subagent",
 		label: "Subagent",
 		description: [
 			"Delegate work to an isolated child pi process.",
 			"Modes: single (`task`), parallel (`tasks[]`), chain (`chain[]` with `{previous}`).",
-			"Resume with `{resume:<session>, task:<steer>}`; limit runtime with `{timeoutMs}`.",
-			"Results include status/model/label/session; transcript session paths are persisted for inspection.",
-			"Use `{listModels:true}` to view allowed models and default." + defaultModelNote,
+			"Resume with exact `session=` JSONL path; tune with model/thinking/tools/timeoutMs on fresh runs.",
+			"Results include status/model/thinking/label/session; use `{listModels:true}` for model policy.",
 		].join(" "),
 		parameters: SubagentParams,
 
@@ -882,18 +970,18 @@ export default function (pi: ExtensionAPI) {
 			const { policy: modelPolicy, error: modelPolicyError } = loadModelPolicy();
 
 			if (params.listModels) {
-				const allowed = Array.from(modelPolicy.allowed);
+				const compactModels = compactModelList(modelPolicy);
 				const payload = {
 					allowlistEnabled: modelPolicy.enabled,
 					default: modelPolicy.defaultModel ?? null,
-					allowed,
+					...compactModels,
 					configPath: modelPolicy.configPath,
 					note: modelPolicy.enabled
-						? "Set `model` per task to one of `allowed`; omit to use `default`."
-						: "Allowlist disabled: any model the harness supports may be used; omitting `model` inherits the harness default.",
+						? "Set `model` to a row id; omit to use `default`."
+						: "Allowlist disabled: any harness model may be used; omitting `model` inherits the harness default.",
 				};
 				return {
-					content: [{ type: "text", text: JSON.stringify(payload, null, 2) }],
+					content: [{ type: "text", text: JSON.stringify(payload) }],
 					details: {
 						mode: "single" as const,
 						agentScope,
@@ -978,7 +1066,7 @@ export default function (pi: ExtensionAPI) {
 
 					const { spec, opts, error } = resolveRunPlan(agents, { ...step, task: taskWithContext }, modelPolicy);
 					if (error || !spec) {
-						results.push(failedSpecResult(step.agent ?? "inline", taskWithContext, i + 1, error ?? "resolve failed"));
+						results.push(failedSpecResult(step.resume ? "resume" : (step.agent ?? "inline"), taskWithContext, i + 1, error ?? "resolve failed"));
 						return {
 							content: [{ type: "text", text: `Chain stopped at step ${i + 1}: ${error ?? "resolve failed"}` }],
 							details: makeDetails("chain")(results),
@@ -1084,7 +1172,7 @@ export default function (pi: ExtensionAPI) {
 					}
 					const { spec, opts, error } = resolveRunPlan(agents, t, modelPolicy);
 					if (error || !spec) {
-						const failed = failedSpecResult(t.agent ?? "inline", t.task, undefined, error ?? "resolve failed");
+						const failed = failedSpecResult(t.resume ? "resume" : (t.agent ?? "inline"), t.task, undefined, error ?? "resolve failed");
 						failed.label = t.label;
 						allResults[index] = failed;
 						emitParallelUpdate();
@@ -1130,7 +1218,7 @@ export default function (pi: ExtensionAPI) {
 			if (params.task) {
 				const { spec, opts, error } = resolveRunPlan(agents, params as RunItem, modelPolicy);
 				if (error || !spec) {
-					const failed = failedSpecResult(params.agent ?? "inline", params.task, undefined, error ?? "resolve failed");
+					const failed = failedSpecResult(params.resume ? "resume" : (params.agent ?? "inline"), params.task, undefined, error ?? "resolve failed");
 					failed.label = params.label;
 					return {
 						content: [{ type: "text", text: error ?? "resolve failed" }],

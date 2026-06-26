@@ -9,7 +9,7 @@ import { Type } from "typebox";
  * Uses a single custom UI so Answer + Note are shown together.
  */
 
-type QuestionType = "text" | "select" | "multiselect" | "confirm" | "multiline";
+type QuestionType = "select" | "multiselect" | "inline";
 
 interface Question {
   id: string;
@@ -27,7 +27,7 @@ interface Answer {
   id: string;
   question: string;
   type: QuestionType;
-  answer: string | string[] | boolean;
+  answer: string | string[];
   note?: string;
   cancelled: boolean;
   noteCancelled?: boolean;
@@ -54,14 +54,7 @@ function isRequired(q: Question): boolean {
   return q.required !== false;
 }
 
-function getOptionsForQuestion(q: Question): Array<{ label: string; value: string | boolean }> {
-  if (q.type === "confirm") {
-    return [
-      { label: "Yes", value: true },
-      { label: "No", value: false },
-    ];
-  }
-
+function getOptionsForQuestion(q: Question): Array<{ label: string; value: string }> {
   if (q.type === "select" || q.type === "multiselect") {
     return (q.options ?? []).map((opt) => ({ label: opt, value: opt }));
   }
@@ -72,10 +65,10 @@ function getOptionsForQuestion(q: Question): Array<{ label: string; value: strin
 function materializeAnswer(q: Question, draft: Draft): Answer {
   const note = draft.noteText.trim();
 
-  let answer: string | string[] | boolean = "[skipped]";
+  let answer: string | string[] = "[skipped]";
   let cancelled = true;
 
-  if (q.type === "text" || q.type === "multiline") {
+  if (q.type === "inline") {
     const value = draft.answerText.trim();
     if (value.length > 0) {
       answer = value;
@@ -108,17 +101,6 @@ function materializeAnswer(q: Question, draft: Draft): Answer {
       cancelled = false;
     } else if (!isRequired(q)) {
       answer = [];
-      cancelled = false;
-    }
-  } else if (q.type === "confirm") {
-    if (draft.selectedIndex === 0) {
-      answer = true;
-      cancelled = false;
-    } else if (draft.selectedIndex === 1) {
-      answer = false;
-      cancelled = false;
-    } else if (!isRequired(q)) {
-      answer = "[skipped]";
       cancelled = false;
     }
   }
@@ -162,15 +144,13 @@ export default function (pi: ExtensionAPI) {
           }),
           type: Type.Union(
             [
-              Type.Literal("text"),
               Type.Literal("select"),
               Type.Literal("multiselect"),
-              Type.Literal("confirm"),
-              Type.Literal("multiline"),
+              Type.Literal("inline"),
             ],
             {
               description:
-                "Question type: 'text' (short), 'select' (single choice), 'multiselect' (multiple choices), 'confirm' (yes/no), 'multiline' (long text)",
+                "Question type: 'select' (single choice), 'multiselect' (multiple choices), 'inline' (text input)",
             },
           ),
           placeholder: Type.Optional(
@@ -279,7 +259,7 @@ export default function (pi: ExtensionAPI) {
 
         let editorBinding: { questionIndex: number; field: "answer" | "note" } | null = null;
 
-        const isTextualAnswerQuestion = (q: Question): boolean => q.type === "text" || q.type === "multiline";
+        const isTextualAnswerQuestion = (q: Question): boolean => q.type === "inline";
 
         const desiredBinding = (): { questionIndex: number; field: "answer" | "note" } | null => {
           const q = items[currentIndex]!;
@@ -366,7 +346,7 @@ export default function (pi: ExtensionAPI) {
         };
 
         const answerMissing = (q: Question, draft: Draft): boolean => {
-          if (q.type === "text" || q.type === "multiline") {
+          if (q.type === "inline") {
             return isRequired(q) && draft.answerText.trim().length === 0;
           }
 
@@ -376,10 +356,6 @@ export default function (pi: ExtensionAPI) {
 
           if (q.type === "multiselect") {
             return isRequired(q) && draft.selectedIndices.length === 0;
-          }
-
-          if (q.type === "confirm") {
-            return isRequired(q) && draft.selectedIndex === null;
           }
 
           return true;
@@ -473,7 +449,7 @@ export default function (pi: ExtensionAPI) {
           const q = items[currentIndex]!;
           const d = drafts[currentIndex]!;
 
-          if ((q.type === "select" || q.type === "multiselect" || q.type === "confirm") && focus === "answer") {
+          if ((q.type === "select" || q.type === "multiselect") && focus === "answer") {
             const options = getOptionsForQuestion(q);
             if (options.length === 0) {
               statusLine = { level: "warning", text: "No options available for this question." };
@@ -609,7 +585,7 @@ export default function (pi: ExtensionAPI) {
             : theme.fg("muted", "Answer");
           addWrappedWithPrefix(lines, " ", answerHeader, renderWidth);
 
-          if (q.type === "select" || q.type === "multiselect" || q.type === "confirm") {
+          if (q.type === "select" || q.type === "multiselect") {
             const opts = getOptionsForQuestion(q);
             for (let i = 0; i < opts.length; i++) {
               const opt = opts[i]!;
@@ -665,7 +641,7 @@ export default function (pi: ExtensionAPI) {
             );
           }
 
-          const modeHint = q.type === "select" || q.type === "multiselect" || q.type === "confirm"
+          const modeHint = q.type === "select" || q.type === "multiselect"
             ? q.type === "multiselect"
               ? "↑↓ move option • Enter/Space toggle • 1-9 quick toggle"
               : "↑↓ move option • Enter/Space choose • 1-9 quick choose"

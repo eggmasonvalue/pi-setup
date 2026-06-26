@@ -1,10 +1,33 @@
 {
   "enabled": true,
   "allowed": [
-    "github-copilot/gpt-5.3-codex",
-    "github-copilot/gpt-5.4",
-    "github-copilot/gpt-5.5",
-    "github-copilot/claude-opus-4.8"
+    {
+      "id": "github-copilot/gpt-5.3-codex",
+      "thinkingLevels":["low", "medium", "high", "xhigh"],
+      "intelligence_index": 44.26,
+      "coding_index": 53.1,
+      "cost_per_task": 0.80,
+      "output_tokens_per_second": 87.84,
+      "description": "Tremendous mileage for most tasks by simply changing thinking levels. Extremely cheap on a pure per-token basis"
+    },
+    {
+      "id": "github-copilot/gpt-5.5",
+      "thinkingLevels":["low", "medium", "high", "xhigh"],
+      "intelligence_index": 54.83,
+      "coding_index": 74.89,
+      "cost_per_task": 0.86,
+      "output_tokens_per_second": 67.59,
+      "description": "SOTA powerhouse"
+    },
+    {
+      "id": "github-copilot/claude-opus-4.8",
+      "thinkingLevels":["low", "medium", "high", "xhigh"],
+      "intelligence_index": 55.69,
+      "coding_index": 74.25,
+      "cost_per_task": 1.79,
+      "output_tokens_per_second": 69.08,
+      "description": "never use unless the user explicitly requests it"
+    }
   ],
   "default": "github-copilot/gpt-5.3-codex"
 }
