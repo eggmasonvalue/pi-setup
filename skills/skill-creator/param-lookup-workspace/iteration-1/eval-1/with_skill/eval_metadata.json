@@ -1,0 +1,19 @@
+{
+  "eval_id": 1,
+  "eval_name": "led-ramp-multi-lookup",
+  "prompt": "What are the values of pLedRamp#1, pLedRamp#2, pLedRamp#3, and pLedRamp#4 in the main parameter sheet? I need to understand the ramp profile.",
+  "assertions": [
+    {
+      "text": "All 4 ramp values returned correctly (100, 800, 2700, 6400)",
+      "check": "output contains 100, 800, 2700, and 6400"
+    },
+    {
+      "text": "Response identifies these as ramp parameters with descriptions",
+      "check": "output mentions 'Ramp' or 'ramp'"
+    },
+    {
+      "text": "All 4 parameters found in a single script invocation",
+      "check": "all 4 results in one call"
+    }
+  ]
+}

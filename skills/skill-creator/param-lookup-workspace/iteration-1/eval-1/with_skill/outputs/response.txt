@@ -1,0 +1,9 @@
+pLedRamp#1 = 100
+pLedRamp#2 = 800
+pLedRamp#3 = 2700
+pLedRamp#4 = 6400
+
+Source: Parameters.xlsm, sheet "Parameters"
+Description/group: Beam Shape Ramp / S_RampParameters
+
+Ramp profile points in order: 100 -> 800 -> 2700 -> 6400.

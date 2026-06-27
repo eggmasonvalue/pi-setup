@@ -1,0 +1,20 @@
+{
+  "run_id": "eval-1-with_skill",
+  "assertions": [
+    {
+      "text": "All 4 ramp values returned correctly (100, 800, 2700, 6400)",
+      "passed": true,
+      "evidence": "Response lists pLedRamp#1=100, #2=800, #3=2700, #4=6400"
+    },
+    {
+      "text": "Response identifies these as ramp parameters with descriptions",
+      "passed": true,
+      "evidence": "Response states group S_RampParameters and description 'Beam Shape Ramp'"
+    },
+    {
+      "text": "All 4 parameters found in a single script invocation",
+      "passed": true,
+      "evidence": "Agent ran one command with all 4 param names"
+    }
+  ]
+}

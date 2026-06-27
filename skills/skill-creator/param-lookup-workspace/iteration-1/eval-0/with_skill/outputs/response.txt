@@ -1,0 +1,11 @@
+Get_pLMMFuncEnable is configured to 0 (unit: --).
+
+Lookup results from the param-lookup skill:
+- Sheet: Parameters, File: Parameters.xlsm, Group: S_LmmParameters, Description: "Select if LMM Functionality is available or Not"
+- Sheet: LMM Parameters, File: Parameters.xlsm, Group: (none), Description: "Select if LMM Functionality is available or Not"
+
+Interpretation:
+- 0 means FALSE / disabled.
+- This parameter controls whether LMM functionality is considered available in the build/variant.
+- In CDD_RegulatorManager.c, all the runtime checks like `if ((boolean)TRUE == Get_pLMMFuncEnable)` will evaluate false, so LMM-specific actions such as `CDD_RegMngr_LMM_PreInit()`, `CDD_RegMngr_LMM_Init()`, `CDD_RegMngr_LMM_DeInit()`, `tps9266x_main()`, `tps9266x_force_deinit()`, LMM diagnosis, and the LMM supply-disable request path will not run at runtime.
+- The `#if CONFIG_LIGHTCONTROL` guards only control compilation of that code; `Get_pLMMFuncEnable` is the runtime enable switch inside those compiled sections.

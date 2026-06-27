@@ -1,0 +1,23 @@
+{
+  "name": "uig55220-pi-setup",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Pi setup package for git distribution",
+  "keywords": [
+    "pi-package"
+  ],
+  "pi": {
+    "extensions": [
+      "./extensions"
+    ],
+    "skills": [
+      "./skills"
+    ],
+    "prompts": [
+      "./prompts"
+    ],
+    "themes": [
+      "./themes"
+    ]
+  }
+}

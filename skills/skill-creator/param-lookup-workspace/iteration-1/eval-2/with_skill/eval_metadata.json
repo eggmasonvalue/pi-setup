@@ -1,0 +1,23 @@
+{
+  "eval_id": 2,
+  "eval_name": "lmm-sheet-json-dump",
+  "prompt": "Give me all parameters from the LMM Parameters sheet in the Parameters.xlsm as JSON so I can quickly scan them.",
+  "assertions": [
+    {
+      "text": "Output is valid JSON",
+      "check": "output is parseable JSON"
+    },
+    {
+      "text": "JSON contains pLMMFuncEnable with value 0",
+      "check": "JSON has pLMMFuncEnable key with value 0"
+    },
+    {
+      "text": "Uses --json and --sheet flags on get_param.py",
+      "check": "invocation uses --json --sheet 'LMM Parameters' --all"
+    },
+    {
+      "text": "Multiple LMM parameters present (not just one)",
+      "check": "JSON has more than 5 entries"
+    }
+  ]
+}

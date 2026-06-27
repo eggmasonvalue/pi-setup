@@ -1,0 +1,10 @@
+{
+  "run_id": "eval-1-without_skill",
+  "assertions": [
+    {
+      "text": "All 4 ramp values returned correctly (100, 800, 2700, 6400)",
+      "passed": true,
+      "evidence": "Agent independently used openpyxl to read the sheet and got correct values"
+    }
+  ]
+}

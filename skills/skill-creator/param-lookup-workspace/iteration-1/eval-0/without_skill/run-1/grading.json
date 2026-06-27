@@ -1,0 +1,15 @@
+{
+  "run_id": "eval-0-without_skill",
+  "assertions": [
+    {
+      "text": "Response correctly identifies the value as 0",
+      "passed": true,
+      "evidence": "Found value via HcmParams.h grep + LMM Data sheet; states 'Disable = 0 = FALSE'"
+    },
+    {
+      "text": "Response includes description about LMM functionality",
+      "passed": true,
+      "evidence": "Response elaborates on LMM runtime paths extensively"
+    }
+  ]
+}

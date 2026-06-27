@@ -1,0 +1,23 @@
+Get_pLMMFuncEnable is the generated accessor for `HcmParams_cs.LmmPar.pLMMFuncEnable` (`uint8`, valid range 0..1) in `pkg\appl\library\Parameters\GeneratedFiles\HcmParams.h`.
+
+Configured value:
+- In `pkg\appl\library\Parameters\Parameters_Excel_File\Parameters.xlsm`
+- Sheet: `LMM Data`
+- Cell `A3`: `pLMMFuncEnable`
+- Cell `B3`: `Disable`
+- Description in `C3`: `Select if LMM Functionality is available or Not`
+
+So the effective configured value is **Disable = 0 = FALSE**.
+
+What it controls:
+- It is the runtime enable for **LMM/light-control functionality** (TPS9266x / pixel-based channels), on top of the compile-time `#if CONFIG_LIGHTCONTROL` guards.
+- In `CDD_RegulatorManager` it gates:
+  - `CDD_RegMngr_LMM_PreInit()` during init
+  - `CDD_RegMngr_LMM_DeInit()` / `tps9266x_main()` / `tps9266x_force_deinit()` during deinit
+  - `CDD_RegMngr_LMM_Init()` during startup sequencing
+  - `CDD_RegMngr_LMM_SetPixelDutyCycle()` for `LMM_LIGHT_CHANNEL`
+  - `CDD_RegMngr_LMM_Diagnosis()`
+  - `tps9266x_CheckDeviceError()` -> `Rte_Write_LmmSupplyDisableReq_TrueFalse(TRUE)`
+- Outside that file it also gates ADB/LMM-related behavior such as VCC3 handling (`CustApplModule`), CAN supervision (`SafetySupervisor`), and pixel-fault handling (`LightCtrlAppl`).
+
+Bottom line: if `CONFIG_LIGHTCONTROL == 1` but `Get_pLMMFuncEnable == FALSE` (current config), the LMM/TPS9266x code is compiled in but the runtime paths are skipped.

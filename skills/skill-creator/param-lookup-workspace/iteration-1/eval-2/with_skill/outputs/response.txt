@@ -1,0 +1,6254 @@
+Here are all parameters from the LMM Parameters sheet in Parameters.xlsm as JSON:
+
+{
+  "pLMMFuncEnable": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "Select if LMM Functionality is available or Not",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#1": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": "Select 1 if LMM is available else 0",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#2": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#3": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAvl#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#1": [
+    {
+      "value": 151,
+      "unit": "--",
+      "description": "Select the type of device (TPS92662/2A/3/3A/4/5/6/7)",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#2": [
+    {
+      "value": 151,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#3": [
+    {
+      "value": 151,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDeviceType#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "UART Bus ID, this is a logical value, the 1st bus ID is 0. Example for 3 buses have IDs: 0, 1 and 2.",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pUartBusId#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "Select LMM address between 0 to 7",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#2": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#3": [
+    {
+      "value": 2,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMAddress#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#1": [
+    {
+      "value": 4626,
+      "unit": "--",
+      "description": "GIve the value of register 16byte\nTPS92664/5/7\nLow byte : SLEWL \nHIGH Byte : SLEWH \nTPS92662/3/2A/3A\nLow Byte : SLEWRATE\nHigh Byte : NA (Keep 0)",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#2": [
+    {
+      "value": 4626,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#3": [
+    {
+      "value": 4626,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMSlewRate#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "OVLMT register value for TPS92662/2A/3/3A.",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMOvlmt#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "TWLMT register value for TPS92664/5/7.\nValue Between 0 to 255",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMTwlmt#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#1": [
+    {
+      "value": 42,
+      "unit": "--",
+      "description": "LEDONTH - LED ON-time Threshold Registers",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#2": [
+    {
+      "value": 42,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#3": [
+    {
+      "value": 42,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMLedOnVoltageTreshold#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#1": [
+    {
+      "value": 63,
+      "unit": "--",
+      "description": "Phase value select between 0 to 1023 (Shall be given by customer)\nE.g. (1023 / (No. of Pixels enabled)) \n1023/ 12 = 85\nSo 85 fro Pixel 0 and then addition of 85 to each pixel",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#2": [
+    {
+      "value": 126,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#3": [
+    {
+      "value": 190,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#4": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#5": [
+    {
+      "value": 318,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#6": [
+    {
+      "value": 382,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#7": [
+    {
+      "value": 447,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#8": [
+    {
+      "value": 512,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#9": [
+    {
+      "value": 577,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#10": [
+    {
+      "value": 640,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#11": [
+    {
+      "value": 705,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#12": [
+    {
+      "value": 768,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#13": [
+    {
+      "value": 832,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#14": [
+    {
+      "value": 896,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#15": [
+    {
+      "value": 960,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#1#16": [
+    {
+      "value": 1023,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#1": [
+    {
+      "value": 63,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#2": [
+    {
+      "value": 126,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#3": [
+    {
+      "value": 190,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#4": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#5": [
+    {
+      "value": 318,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#6": [
+    {
+      "value": 382,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#7": [
+    {
+      "value": 447,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#8": [
+    {
+      "value": 512,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#9": [
+    {
+      "value": 577,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#10": [
+    {
+      "value": 640,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#11": [
+    {
+      "value": 705,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#12": [
+    {
+      "value": 768,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#13": [
+    {
+      "value": 832,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#14": [
+    {
+      "value": 896,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#15": [
+    {
+      "value": 960,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#2#16": [
+    {
+      "value": 1023,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#1": [
+    {
+      "value": 63,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#2": [
+    {
+      "value": 126,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#3": [
+    {
+      "value": 190,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#4": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#5": [
+    {
+      "value": 318,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#6": [
+    {
+      "value": 382,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#7": [
+    {
+      "value": 447,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#8": [
+    {
+      "value": 512,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#9": [
+    {
+      "value": 577,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#10": [
+    {
+      "value": 640,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#11": [
+    {
+      "value": 705,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#12": [
+    {
+      "value": 768,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#13": [
+    {
+      "value": 832,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#14": [
+    {
+      "value": 896,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#15": [
+    {
+      "value": 960,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#3#16": [
+    {
+      "value": 1023,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#4#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#5#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#6#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPhaseShift#7#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "Default width value select between 0 to 255\nthis will be used incase of communication failure",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#3": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#4": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#5": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#6": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#7": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#8": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#9": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#10": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#11": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#12": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#15": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#1#16": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#3": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#4": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#5": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#6": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#7": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#8": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#9": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#10": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#11": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#12": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#15": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#2#16": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#3": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#4": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#5": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#6": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#7": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#8": [
+    {
+      "value": 102,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#9": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#10": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#11": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#12": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#15": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#3#16": [
+    {
+      "value": 255,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#4#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#5#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#6#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#2": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#4": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#5": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#9": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#10": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#11": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#12": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#13": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#14": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#15": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMDefWidth#7#16": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "Pixel Enable\n1: Enable\n0: Disable",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#2": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#3": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#4": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#5": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#6": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#7": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#8": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#9": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#10": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#11": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#12": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#13": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#14": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#15": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#16": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#17": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#18": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#19": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#20": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#21": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#22": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#23": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#24": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#25": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#26": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#27": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#28": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#29": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#30": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#31": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#32": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#33": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#34": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#35": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#36": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#37": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#38": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#39": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#40": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#41": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#42": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#43": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#44": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#45": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#46": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#47": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#48": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#49": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#50": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#51": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#52": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#53": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#54": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#55": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#56": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#57": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#58": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#59": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#60": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#61": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#62": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#63": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#64": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#65": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#66": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#67": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#68": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#69": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#70": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#71": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#72": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#73": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#74": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#75": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#76": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#77": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#78": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#79": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#80": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#81": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#82": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#83": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#84": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#85": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#86": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#87": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#88": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#89": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#90": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#91": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#92": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#93": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#94": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#95": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#96": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#97": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#98": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#99": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#100": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#101": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#102": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#103": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#104": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#105": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#106": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#107": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#108": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#109": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#110": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#111": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelEn#112": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "channel no used by the segment for setting the current and light output from LED driver",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#2": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#3": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#4": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#5": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#6": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#7": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#8": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#9": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#10": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#11": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#12": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#13": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#14": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#15": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#16": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#17": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#18": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#19": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#20": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#21": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#22": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#23": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#24": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#25": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#26": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#27": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#28": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#29": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#30": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#31": [
+    {
+      "value": 3,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#32": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#33": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#34": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#35": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#36": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#37": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#38": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#39": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#40": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#41": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#42": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#43": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#44": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#45": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#46": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#47": [
+    {
+      "value": 4,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#48": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#49": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#50": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#51": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#52": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#53": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#54": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#55": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#56": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#57": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#58": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#59": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#60": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#61": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#62": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#63": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#64": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#65": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#66": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#67": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#68": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#69": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#70": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#71": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#72": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#73": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#74": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#75": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#76": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#77": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#78": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#79": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#80": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#81": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#82": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#83": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#84": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#85": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#86": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#87": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#88": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#89": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#90": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#91": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#92": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#93": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#94": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#95": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#96": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#97": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#98": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#99": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#100": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#101": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#102": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#103": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#104": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#105": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#106": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#107": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#108": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#109": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#110": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#111": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMBuckCh#112": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#1": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": "Pixel Duty Cycle in Percentage %",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#2": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#3": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#4": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#5": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#6": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#7": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#8": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#9": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#10": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#11": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#12": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#13": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#14": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#15": [
+    {
+      "value": 90,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#16": [
+    {
+      "value": 60,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#17": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#18": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#19": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#20": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#21": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#22": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#23": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#24": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#25": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#26": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#27": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#28": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#29": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#30": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#31": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#32": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#33": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#34": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#35": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#36": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#37": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#38": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#39": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#40": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#41": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#42": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#43": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#44": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#45": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#46": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#47": [
+    {
+      "value": 100,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#48": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#49": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#50": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#51": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#52": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#53": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#54": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#55": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#56": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#57": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#58": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#59": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#60": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#61": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#62": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#63": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#64": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#65": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#66": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#67": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#68": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#69": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#70": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#71": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#72": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#73": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#74": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#75": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#76": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#77": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#78": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#79": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#80": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#81": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#82": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#83": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#84": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#85": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#86": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#87": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#88": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#89": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#90": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#91": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#92": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#93": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#94": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#95": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#96": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#97": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#98": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#99": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#100": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#101": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#102": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#103": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#104": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#105": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#106": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#107": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#108": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#109": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#110": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#111": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pLMMPixelDutyCycle#112": [
+    {
+      "value": 0,
+      "unit": "%",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#1": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": "Mention how many faulty pixel are allowed in each channel, if faulty pixels are more that this value then complete channel will be turned off",
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#2": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#3": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#4": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#5": [
+    {
+      "value": 1,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#6": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#7": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ],
+  "pMaxFaultyPixels#8": [
+    {
+      "value": 0,
+      "unit": "--",
+      "description": null,
+      "group": null,
+      "sheet": "LMM Parameters",
+      "file": "Parameters.xlsm"
+    }
+  ]
+}
