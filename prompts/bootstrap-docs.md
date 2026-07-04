@@ -99,36 +99,31 @@ the todo body, PR, commit message, or final response.
 
 ## AGENTS.md must contain
 
-- **Hard guardrails** near the top, including: **never commit to `main`
-  directly — always work on a branch / open a PR** (adapt for the project's
-  actual default branch and workflow).
-- **Read routing**: read MAP before touching data flow/structure; read
-  DECISIONS before changing or re-litigating a recorded tradeoff; read
-  CONVENTIONS while writing code; check the `todo` tool (`todo list`) when
-  starting work, and `todo claim` a task before working it so parallel sessions
-  don't collide. Do not read everything by default.
-- **Write triggers (event-based)**: module added/moved/removed or data-flow
-  change → MAP; choice crossing the decision-log bar → DECISIONS; new
-  repeatable pattern/standard → CONVENTIONS; user-facing behavior/usage changed
-  → README.
-- **Decision-log bar**: include the four-part entry test above and the explicit
-  exclusions for bug fixes, cleanup, mechanical refactors, implementation
-  tactics, and task-local reasoning.
-- **Do NOT document**: changelog/worklog (that's git), feature/status lists,
-  restatements of what code plainly does, or decisions that fail the
-  decision-log bar.
-- **CONVENTIONS vs DECISIONS**: a convention is one imperative line with no
-  "because"; rationale belongs in DECISIONS only when it crosses the
-  decision-log bar.
-- **Todos ↔ Decisions**: the `todo` tool is stateful, not a scratchpad — todos
-  are real files under `.pi/todos` with a markdown body for working notes,
-  a status lifecycle (`open`/`closed`/`done`), tags, subtasks (`parent_id`),
-  and per-session `claim`/`release`. Keep working context in the todo body
-  while a task is live. But closed/done todos are **garbage-collected ~7 days
-  after creation**, so before closing a todo, graduate durable rationale into
-  DECISIONS only if it crosses the decision-log bar.
-- **Definition of Done**: a task is done only when matching durable artifacts
-  reflect the change; an unrecorded decision-log-bar choice means not done.
+Keep `AGENTS.md` concise. It is a routing and guardrail file, not the place for
+long rationale. Target these sections:
+
+- **Guardrails**: no direct commits to the default branch; work on a branch/open
+  a PR; keep changes scoped; verify behavior before documenting claims.
+- **Read routing**: MAP before layout/data-flow changes; DECISIONS before
+  changing a recorded tradeoff; CONVENTIONS while coding; `todo list` at task
+  start and `todo claim <id>` before editing orchestrated todos.
+- **Write triggers**: MAP for module/data-flow changes; DECISIONS only for
+  choices crossing the decision-log bar; CONVENTIONS for repeatable rules;
+  README for user-facing setup/usage changes.
+- **Decision-log bar**: compressed wording is fine, but it must say DECISIONS is
+  a curated ADR file, not a worklog; append only for durable architecture,
+  behavior, data-shape, dependency-ownership, or expensive-migration choices
+  whose rationale future agents need.
+- **Explicit exclusions**: no DECISIONS entries for bug fixes, cleanup,
+  dead-code removal, renames, mechanical refactors, one-feature implementation
+  tactics, routine test/lint chores, changelogs, status lists, or obvious code
+  behavior.
+- **CONVENTIONS vs DECISIONS**: conventions are terse imperatives; rationale
+  belongs in DECISIONS only if it passes the decision-log bar.
+- **Todos ↔ Decisions**: todos hold live working context; before closing a todo,
+  graduate rationale to DECISIONS only if it passes the decision-log bar.
+- **Definition of Done**: code, checks, and durable docs must agree; an
+  unrecorded decision-log-bar choice means the task is not done.
 
 ## DECISIONS.md entry format
 
