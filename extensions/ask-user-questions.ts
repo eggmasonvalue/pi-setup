@@ -124,11 +124,8 @@ export default function (pi: ExtensionAPI) {
       "Batch-ask multiple related questions with context. Always includes a per-question Note field for nuanced answers.",
     promptSnippet: "Ask the user for information using batch question collection.",
     promptGuidelines: [
-      "Use ask_user_questions when you need multiple pieces of information for research or planning.",
-      "Group related questions together to reduce back-and-forth interruptions.",
-      "Provide context/help text for clarifying questions.",
-      "Structure your questions clearly so they can be answered without ambiguity.",
-      "Use the Note section to capture nuance and dependencies.",
+      "Use ask_user_questions when you need multiple missing inputs from the user.",
+      "Ask one concise batch and use Note fields for nuances.",
     ],
     parameters: Type.Object({
       title: Type.String({

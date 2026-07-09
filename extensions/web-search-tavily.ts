@@ -185,9 +185,8 @@ export default function (pi: ExtensionAPI) {
       `Output is truncated to ${DEFAULT_MAX_LINES} lines or ${formatSize(DEFAULT_MAX_BYTES)} (whichever is hit first).`,
     promptSnippet: "Search the web for up-to-date information using Tavily.",
     promptGuidelines: [
-      "Use search_web when the user asks for current, factual, or external information.",
-      "Prefer high-quality, authoritative sources and cross-check key claims.",
-      "Cite URLs in final answers when search_web results were used.",
+      "Use search_web for current or external facts.",
+      "Cite source URLs when search_web was used.",
     ],
     parameters: SearchParams,
 

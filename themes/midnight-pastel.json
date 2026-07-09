@@ -1,0 +1,98 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/src/modes/interactive/theme/theme-schema.json",
+  "name": "midnight-pastel",
+  "vars": {
+    "bgMain": "#0B0D12",
+    "bgSurface": "#11151D",
+    "bgElevated": "#171C26",
+
+    "border": "#2A3042",
+    "borderAccent": "#55658C",
+    "borderMuted": "#232A39",
+
+    "text": "#DFE5F7",
+    "muted": "#B7C0DD",
+    "dim": "#8F98B5",
+
+    "periwinkle": "#AEBBFF",
+    "sky": "#A7D8FF",
+    "lavender": "#C7B3FF",
+    "sage": "#9CCFB8",
+    "apricot": "#DDBE95",
+    "rose": "#D8A8B7",
+    "tealDust": "#8FBCC0",
+    "mauveDust": "#B59FC6",
+
+    "userMsg": "#151C28",
+    "customMsg": "#1C182C",
+    "selectedBg": "#20283A",
+
+    "toolPending": "#162033",
+    "toolSuccess": "#172A23",
+    "toolError": "#2B1824"
+  },
+  "colors": {
+    "accent": "sky",
+    "border": "border",
+    "borderAccent": "borderAccent",
+    "borderMuted": "borderMuted",
+    "success": "sage",
+    "error": "rose",
+    "warning": "apricot",
+    "muted": "muted",
+    "dim": "dim",
+    "text": "text",
+    "thinkingText": "#C0CAE7",
+
+    "selectedBg": "selectedBg",
+    "userMessageBg": "userMsg",
+    "userMessageText": "#E6EBFA",
+    "customMessageBg": "customMsg",
+    "customMessageText": "#E4DEFF",
+    "customMessageLabel": "mauveDust",
+    "toolPendingBg": "toolPending",
+    "toolSuccessBg": "toolSuccess",
+    "toolErrorBg": "toolError",
+    "toolTitle": "tealDust",
+    "toolOutput": "#B9C5E8",
+
+    "mdHeading": "#C7D0F6",
+    "mdLink": "sky",
+    "mdLinkUrl": "#8CA5D2",
+    "mdCode": "#9CC8E8",
+    "mdCodeBlock": "#AFCFBF",
+    "mdCodeBlockBorder": "#3B4867",
+    "mdQuote": "#B8C2E0",
+    "mdQuoteBorder": "#4A5675",
+    "mdHr": "#3A435D",
+    "mdListBullet": "lavender",
+
+    "toolDiffAdded": "#9DCFB8",
+    "toolDiffRemoved": "#D8A8B7",
+    "toolDiffContext": "#B2BCD8",
+
+    "syntaxComment": "#7E89A8",
+    "syntaxKeyword": "#AEBBFF",
+    "syntaxFunction": "#8FBCC0",
+    "syntaxVariable": "#D3DBFF",
+    "syntaxString": "#A7CBB4",
+    "syntaxNumber": "#DDBE95",
+    "syntaxType": "#A7D8FF",
+    "syntaxOperator": "#C5B1D2",
+    "syntaxPunctuation": "#B9C3E2",
+
+    "thinkingOff": "borderMuted",
+    "thinkingMinimal": "#56607A",
+    "thinkingLow": "#6E89A8",
+    "thinkingMedium": "#7FA6AE",
+    "thinkingHigh": "#9A93C1",
+    "thinkingXhigh": "#B488A3",
+
+    "bashMode": "#B8A97D"
+  },
+  "export": {
+    "pageBg": "#0B0D12",
+    "cardBg": "#11151D",
+    "infoBg": "#1E2033"
+  }
+}
