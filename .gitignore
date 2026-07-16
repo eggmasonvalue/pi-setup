@@ -1,5 +1,7 @@
 # secrets/runtime state
 auth.json
+models.json
+settings.json
 sessions/
 .pi/
 npm/

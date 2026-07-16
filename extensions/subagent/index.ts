@@ -306,6 +306,20 @@ function compactModelList(policy: ModelPolicy): { columns: string[]; models: unk
 	};
 }
 
+/**
+ * Reads a model allowlist entry's `thinkingLevels` metadata as a validated
+ * string array, or undefined if absent/malformed. Presence of this array on
+ * an entry turns it from descriptive metadata into an enforced per-model
+ * thinking-level allowlist — curators drop the risky level (e.g. `xhigh`,
+ * prone to overthinking/scope creep on some models) from the array to block
+ * it. Omit the key entirely to leave thinking unrestricted for that model.
+ */
+function getAllowedThinkingLevels(entry: ModelAllowlistEntry | undefined): string[] | undefined {
+	const levels = entry?.thinkingLevels;
+	if (!Array.isArray(levels) || levels.length === 0) return undefined;
+	return levels.every((l): l is string => typeof l === "string") ? levels : undefined;
+}
+
 function enforceModelPolicy(spec: ResolvedSpec, policy: ModelPolicy): { spec?: ResolvedSpec; error?: string } {
 	if (!policy.enabled) return { spec };
 
@@ -320,6 +334,13 @@ function enforceModelPolicy(spec: ResolvedSpec, policy: ModelPolicy): { spec?: R
 		const extra = policy.allowed.size > 8 ? ` (+${policy.allowed.size - 8} more)` : "";
 		return {
 			error: `Model \"${model}\" is not in allowlist (${policy.configPath}). Allowed: ${allowedPreview}${extra}`,
+		};
+	}
+
+	const allowedThinking = getAllowedThinkingLevels(policy.metadata.get(model));
+	if (spec.thinking && allowedThinking && !allowedThinking.includes(spec.thinking)) {
+		return {
+			error: `Thinking level \"${spec.thinking}\" is not allowed for model \"${model}\" (${policy.configPath}). Allowed: ${allowedThinking.join(", ")}.`,
 		};
 	}
 
@@ -442,7 +463,7 @@ function resolveRunPlan(
 function tallyStatuses(results: SingleResult[]): string {
 	const counts = new Map<string, number>();
 	for (const r of results) counts.set(statusOf(r), (counts.get(statusOf(r)) ?? 0) + 1);
-	const order = ["done", "failed", "timeout", "aborted", "never-started", "running"];
+	const order = ["done", "failed", "policy-blocked", "timeout", "aborted", "never-started", "running"];
 	return order
 		.filter((s) => counts.has(s))
 		.map((s) => `${counts.get(s)} ${s}`)
@@ -515,7 +536,7 @@ function getFinalOutput(messages: Message[]): string {
 	return "";
 }
 
-const NON_SUCCESS_STOP_REASONS = new Set(["error", "aborted", "timeout", "never-started"]);
+const NON_SUCCESS_STOP_REASONS = new Set(["error", "aborted", "timeout", "never-started", "policy-blocked"]);
 
 function isFailedResult(result: SingleResult): boolean {
 	return result.exitCode !== 0 || NON_SUCCESS_STOP_REASONS.has(result.stopReason ?? "");
@@ -530,6 +551,8 @@ function statusOf(result: SingleResult): string {
 			return "aborted";
 		case "timeout":
 			return "timeout";
+		case "policy-blocked":
+			return "policy-blocked";
 	}
 	if (result.exitCode === -1) return "running";
 	return isFailedResult(result) ? "failed" : "done";
@@ -675,6 +698,7 @@ async function runSingleAgent(
 	onUpdate: OnUpdateCallback | undefined,
 	makeDetails: (results: SingleResult[]) => SubagentDetails,
 	opts?: { resume?: string; timeoutMs?: number; label?: string },
+	policy?: ModelPolicy,
 ): Promise<SingleResult> {
 	const resumeInput = opts?.resume?.trim() || undefined;
 	const resumeResolution: { path?: string; error?: string } = resumeInput
@@ -753,6 +777,7 @@ async function runSingleAgent(
 		args.push(`Task: ${task}`);
 		let wasAborted = false;
 		let wasTimeout = false;
+		let wasPolicyBlocked = false;
 
 		const exitCode = await new Promise<number>((resolve) => {
 			const invocation = getPiInvocation(args);
@@ -767,6 +792,23 @@ async function runSingleAgent(
 			const killProc = (timeout: boolean) => {
 				if (timeout) wasTimeout = true;
 				else wasAborted = true;
+				proc.kill("SIGTERM");
+				setTimeout(() => {
+					if (!proc.killed) proc.kill("SIGKILL");
+				}, 5000);
+			};
+
+			// Enforced on every run (not just resume) as defense-in-depth, but this is
+			// the actual hole-closer: resume bypasses resolveSpec/enforceModelPolicy
+			// entirely (the model is fixed by the resumed session), so the allowlist
+			// can only be checked reactively, once the child reports which model it's
+			// actually using.
+			const blockForPolicy = (model: string) => {
+				if (wasPolicyBlocked) return;
+				wasPolicyBlocked = true;
+				const allowedPreview = Array.from(policy?.allowed ?? []).slice(0, 8).join(", ") || "(none)";
+				const extra = policy && policy.allowed.size > 8 ? ` (+${policy.allowed.size - 8} more)` : "";
+				currentResult.errorMessage = `Model "${model}" is not in allowlist (${policy?.configPath}). Allowed: ${allowedPreview}${extra}. Killed resumed session to enforce policy — resume again with an allowed model is not possible (model is fixed by the session); start a fresh run instead.`;
 				proc.kill("SIGTERM");
 				setTimeout(() => {
 					if (!proc.killed) proc.kill("SIGKILL");
@@ -807,6 +849,7 @@ async function runSingleAgent(
 							currentResult.usage.contextTokens = usage.totalTokens || 0;
 						}
 						if (!currentResult.model && msg.model) currentResult.model = msg.model;
+						if (policy?.enabled && msg.model && !policy.allowed.has(msg.model)) blockForPolicy(msg.model);
 						if (msg.stopReason) currentResult.stopReason = msg.stopReason;
 						if (msg.errorMessage) currentResult.errorMessage = msg.errorMessage;
 					}
@@ -857,7 +900,8 @@ async function runSingleAgent(
 		if (!resumePath) resolveSessionFile(sessionDir, currentResult);
 		// Abort/timeout no longer throw: return the partial result so completed work
 		// is never discarded and the session path stays inspectable/resumable.
-		if (wasTimeout) currentResult.stopReason = "timeout";
+		if (wasPolicyBlocked) currentResult.stopReason = "policy-blocked";
+		else if (wasTimeout) currentResult.stopReason = "timeout";
 		else if (wasAborted) currentResult.stopReason = "aborted";
 		return currentResult;
 	} finally {
@@ -876,44 +920,53 @@ async function runSingleAgent(
 	}
 }
 
+// Shared param-description fragments: single source of truth, composed per
+// schema below. Avoids the copy/paste drift that let a stale field name
+// (`stopReason=timeout`, which is never actually in the model-facing envelope
+// — the envelope key is `status=`) survive identically in three places.
+const DESC = {
+	task: "Task to delegate to the subagent. When `resume` is set, this is the steering/correction prompt appended to the resumed session instead of a fresh task.",
+	label: "Correlation label echoed in the result envelope (e.g. repo/feature name).",
+	agent: "Optional named agent. If omitted, runs inline.",
+	systemPrompt:
+		"Inline system prompt, appended to the child's base prompt. Ignored if `agent` is set (the named agent's own prompt is used instead).",
+	model:
+		"Model for the subagent, e.g. 'sonnet' or 'provider/id'. Subject to the model allowlist if enabled (see `listModels`). Must be omitted when `resume` is set — the model is fixed by the resumed session.",
+	thinking:
+		"Thinking level for the subagent model (see `thinkingLevels` in `listModels` output for valid values per model; enforced when the allowlist is enabled).",
+	tools: "Tool allowlist, e.g. ['read','grep','bash']. Omit to use the harness's default toolset.",
+	cwd: "Working directory for the agent process. Defaults to the current session's cwd.",
+	resume:
+		"Exact child session JSONL path from a previous result's `session=` field. The `task` you provide is appended as the next steering turn. Only `timeoutMs`/`label` may vary — other params are fixed by the session and error if passed alongside `resume`.",
+	timeoutMs: "Kill the child after this many ms and return partial output (status=timeout). No default.",
+} as const;
+
 const TaskItem = Type.Object({
-	task: Type.String({ description: "Task to delegate to the subagent" }),
-	label: Type.Optional(Type.String({ description: "Correlation label echoed in the result envelope (e.g. repo/feature name)." })),
-	agent: Type.Optional(Type.String({ description: "Optional named agent. If omitted, runs inline." })),
-	systemPrompt: Type.Optional(Type.String({ description: "Inline system prompt (appended). Used when no agent is named." })),
-	model: Type.Optional(Type.String({ description: "Model for the subagent, e.g. 'sonnet' or 'provider/id'." })),
-	thinking: Type.Optional(Type.String({ description: "Thinking level for the subagent model." })),
-	tools: Type.Optional(Type.Array(Type.String(), { description: "Tool allowlist, e.g. ['read','grep','bash']." })),
-	cwd: Type.Optional(Type.String({ description: "Working directory for the agent process" })),
-	resume: Type.Optional(
-		Type.String({
-			description:
-				"Exact child session JSONL path from a previous result's session= field. Appends `task`; only timeoutMs/label may vary.",
-		}),
-	),
-	timeoutMs: Type.Optional(
-		Type.Number({ description: "Kill the child after this many ms and return partial output (stopReason=timeout). No default." }),
-	),
+	task: Type.String({ description: DESC.task }),
+	label: Type.Optional(Type.String({ description: DESC.label })),
+	agent: Type.Optional(Type.String({ description: DESC.agent })),
+	systemPrompt: Type.Optional(Type.String({ description: DESC.systemPrompt })),
+	model: Type.Optional(Type.String({ description: DESC.model })),
+	thinking: Type.Optional(Type.String({ description: DESC.thinking })),
+	tools: Type.Optional(Type.Array(Type.String(), { description: DESC.tools })),
+	cwd: Type.Optional(Type.String({ description: DESC.cwd })),
+	resume: Type.Optional(Type.String({ description: DESC.resume })),
+	timeoutMs: Type.Optional(Type.Number({ description: DESC.timeoutMs })),
 });
 
 const ChainItem = Type.Object({
-	task: Type.String({ description: "Task with optional {previous} placeholder for prior output" }),
-	label: Type.Optional(Type.String({ description: "Correlation label echoed in the result envelope." })),
-	agent: Type.Optional(Type.String({ description: "Optional named agent. If omitted, runs inline." })),
-	systemPrompt: Type.Optional(Type.String({ description: "Inline system prompt (appended). Used when no agent is named." })),
-	model: Type.Optional(Type.String({ description: "Model for the subagent, e.g. 'sonnet' or 'provider/id'." })),
-	thinking: Type.Optional(Type.String({ description: "Thinking level for the subagent model." })),
-	tools: Type.Optional(Type.Array(Type.String(), { description: "Tool allowlist, e.g. ['read','grep','bash']." })),
-	cwd: Type.Optional(Type.String({ description: "Working directory for the agent process" })),
-	resume: Type.Optional(
-		Type.String({
-			description:
-				"Exact child session JSONL path from a previous result's session= field. Appends `task`; only timeoutMs/label may vary.",
-		}),
-	),
-	timeoutMs: Type.Optional(
-		Type.Number({ description: "Kill the child after this many ms and return partial output (stopReason=timeout). No default." }),
-	),
+	task: Type.String({
+		description: `Task with optional {previous} placeholder for prior output. ${DESC.task}`,
+	}),
+	label: Type.Optional(Type.String({ description: DESC.label })),
+	agent: Type.Optional(Type.String({ description: DESC.agent })),
+	systemPrompt: Type.Optional(Type.String({ description: DESC.systemPrompt })),
+	model: Type.Optional(Type.String({ description: DESC.model })),
+	thinking: Type.Optional(Type.String({ description: DESC.thinking })),
+	tools: Type.Optional(Type.Array(Type.String(), { description: DESC.tools })),
+	cwd: Type.Optional(Type.String({ description: DESC.cwd })),
+	resume: Type.Optional(Type.String({ description: DESC.resume })),
+	timeoutMs: Type.Optional(Type.Number({ description: DESC.timeoutMs })),
 });
 
 const AgentScopeSchema = StringEnum(["user", "project", "both"] as const, {
@@ -922,22 +975,15 @@ const AgentScopeSchema = StringEnum(["user", "project", "both"] as const, {
 });
 
 const SubagentParams = Type.Object({
-	task: Type.Optional(Type.String({ description: "Task to delegate (single mode)" })),
-	label: Type.Optional(Type.String({ description: "Correlation label echoed in the result envelope (single mode)." })),
-	agent: Type.Optional(Type.String({ description: "Optional named agent (single mode). If omitted, runs inline." })),
-	systemPrompt: Type.Optional(Type.String({ description: "Inline system prompt (single mode). Used when no agent is named." })),
-	model: Type.Optional(Type.String({ description: "Model for the subagent (single mode)." })),
-	thinking: Type.Optional(Type.String({ description: "Thinking level for the subagent model (single mode)." })),
-	tools: Type.Optional(Type.Array(Type.String(), { description: "Tool allowlist (single mode)." })),
-	resume: Type.Optional(
-		Type.String({
-			description:
-				"Exact child session JSONL path from a previous result's session= field. Appends `task`; only timeoutMs/label may vary.",
-		}),
-	),
-	timeoutMs: Type.Optional(
-		Type.Number({ description: "Kill the child after this many ms and return partial output (stopReason=timeout). No default." }),
-	),
+	task: Type.Optional(Type.String({ description: `${DESC.task} (single mode)` })),
+	label: Type.Optional(Type.String({ description: DESC.label })),
+	agent: Type.Optional(Type.String({ description: DESC.agent })),
+	systemPrompt: Type.Optional(Type.String({ description: DESC.systemPrompt })),
+	model: Type.Optional(Type.String({ description: DESC.model })),
+	thinking: Type.Optional(Type.String({ description: DESC.thinking })),
+	tools: Type.Optional(Type.Array(Type.String(), { description: DESC.tools })),
+	resume: Type.Optional(Type.String({ description: DESC.resume })),
+	timeoutMs: Type.Optional(Type.Number({ description: DESC.timeoutMs })),
 	tasks: Type.Optional(Type.Array(TaskItem, { description: "Array of tasks for parallel execution" })),
 	chain: Type.Optional(Type.Array(ChainItem, { description: "Array of steps for sequential execution" })),
 	listModels: Type.Optional(
@@ -947,7 +993,7 @@ const SubagentParams = Type.Object({
 	confirmProjectAgents: Type.Optional(
 		Type.Boolean({ description: "Prompt before running project-local agents. Default: true.", default: true }),
 	),
-	cwd: Type.Optional(Type.String({ description: "Working directory for the agent process (single mode)" })),
+	cwd: Type.Optional(Type.String({ description: `${DESC.cwd} (single mode)` })),
 });
 
 export default function (pi: ExtensionAPI) {
@@ -1099,6 +1145,7 @@ export default function (pi: ExtensionAPI) {
 						chainUpdate,
 						makeDetails("chain"),
 						opts,
+						modelPolicy,
 					);
 					results.push(result);
 
@@ -1194,6 +1241,7 @@ export default function (pi: ExtensionAPI) {
 						},
 						makeDetails("parallel"),
 						opts,
+						modelPolicy,
 					);
 					allResults[index] = result;
 					emitParallelUpdate();
@@ -1236,6 +1284,7 @@ export default function (pi: ExtensionAPI) {
 					onUpdate,
 					makeDetails("single"),
 					opts,
+					modelPolicy,
 				);
 				return {
 					content: [{ type: "text", text: buildTaskBlock(result) }],
