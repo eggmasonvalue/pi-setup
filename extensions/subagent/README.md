@@ -138,7 +138,7 @@ prefixed with one terse machine-parsable line carrying only what the *tool* uniq
 <the child's own final output, verbatim, byte-capped>
 ```
 
-`status` is one of `done` / `failed` / `timeout` / `aborted` / `never-started`. The tool does
+`status` is one of `done` / `failed` / `timeout` / `aborted` / `never-started` / `policy-blocked`. The tool does
 **not** wrap or reformat the child's payload — if you want JSON back, tell the child (via
 `task`/`systemPrompt`) to emit JSON. The rich TUI rendering for the human lives in tool
 `details` and never enters the main agent's context.
@@ -248,9 +248,11 @@ Behavior when enabled:
 
 - Effective model resolution is: inline `model` → named-agent `model` → allowlist `default`.
 - The resolved model must match an allowed `id` exactly.
+- **`thinkingLevels` is enforced, not just descriptive.** If an allowed entry includes a `thinkingLevels` array, the resolved `thinking` value must be one of them or the call fails (fresh runs only — `thinking` can't be passed on `resume` at all). Drop a level from the array (e.g. remove `"xhigh"`) to block it for that model — useful for a model/level combo prone to overthinking or scope creep. Omit the `thinkingLevels` key on an entry entirely to leave thinking unrestricted for that model.
 - If no model resolves and no `default` is set, the call fails early.
 - If the file is missing, policy is disabled (legacy behavior).
 - `subagent { listModels: true }` returns compact policy JSON as `{ columns, models, default, allowlistEnabled, configPath }`.
+- **Resume is checked too.** `resume` bypasses model *resolution* (the model is fixed by the resumed session, not re-specified), but the policy is still enforced reactively: as soon as the resumed child reports which model it's actually running, the tool checks it against the allowlist and kills the child immediately (`status=policy-blocked`) if it's not allowed — e.g. a session started before the model was removed from `allowed`. There is no way to "fix" a blocked resume in place (the model is fixed by the session); start a fresh run with an allowed model instead.
 
 **Security:** project-local agents are repo-controlled prompts. By default only user-level
 agents load. Enable project agents with `agentScope: "both"` (or `"project"`), and the tool

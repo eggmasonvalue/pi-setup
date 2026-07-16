@@ -119,7 +119,8 @@ function buildContextMessage(cwd: string): string {
 	return [
 		"Session context:",
 		`- Date/time: ${now.toString()}`,
-		`- Environment: ${describePlatform()} (${describeShell()})`,
+		`- OS: ${describePlatform()}`,
+		`- Shell (used by the bash tool): ${describeShell()}`,
 		`- Line endings: ${describeLineEndings(cwd)}`,
 	].join("\n");
 }
