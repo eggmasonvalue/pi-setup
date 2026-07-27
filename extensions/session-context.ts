@@ -26,6 +26,11 @@
  *   `.gitattributes` file is present, since CRLF/LF mismatches are a
  *   recurring source of edit/diff breakage on Windows.
  *
+ * Trigger:
+ * - The message is injected at the first agent run only for a fresh session:
+ *   a startup session with no entries, or a `/new` session. It is not injected
+ *   after `/resume`, `/reload`, or `/fork`.
+ *
  * Toggle:
  * - `/session-context on|off|status` persists the enabled flag to
  *   ~/.pi/agent/session-context.json so the choice survives across
@@ -120,13 +125,15 @@ function buildContextMessage(cwd: string): string {
 		"Session context:",
 		`- Date/time: ${now.toString()}`,
 		`- OS: ${describePlatform()}`,
-		`- Shell (used by the bash tool): ${describeShell()}`,
+		`- Shell: ${describeShell()}`,
+		"- Paths: use shell-specific path syntax only in bash tool commands; use native OS path syntax for every other tool call.",
 		`- Line endings: ${describeLineEndings(cwd)}`,
 	].join("\n");
 }
 
 export default function (pi: ExtensionAPI) {
 	let injected = false;
+	let isFreshSession = false;
 
 	pi.registerCommand("session-context", {
 		description: "Toggle the one-time date/env/line-ending context message injected at session start (usage: on|off|status)",
@@ -149,8 +156,14 @@ export default function (pi: ExtensionAPI) {
 		},
 	});
 
+	pi.on("session_start", (event, ctx) => {
+		isFreshSession =
+			(event.reason === "startup" || event.reason === "new") &&
+			ctx.sessionManager.getEntries().length === 0;
+	});
+
 	pi.on("before_agent_start", (_event, ctx) => {
-		if (injected) return;
+		if (injected || !isFreshSession) return;
 		injected = true;
 
 		if (!readState().enabled) return;
@@ -166,5 +179,6 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("session_shutdown", () => {
 		injected = false;
+		isFreshSession = false;
 	});
 }
