@@ -998,36 +998,6 @@ const SubagentParams = Type.Object({
 
 export default function (pi: ExtensionAPI) {
 	pi.registerTool({
-		name: "load_subagent_tool",
-		label: "Load Subagent Tool",
-		description:
-			"Activates the subagent tool for this session, so it can be called afterward to delegate work to an isolated child pi process.",
-		promptSnippet:
-			"subagent is not active by default; call load_subagent_tool first if a task truly needs an isolated child process.",
-		promptGuidelines: [
-			"Only call load_subagent_tool for isolation, parallelism, or background delegation — not general task difficulty.",
-			"Call load_subagent_tool at most once, only when needed, not speculatively; subagent stays active for the rest of the session afterward.",
-		],
-		parameters: Type.Object({}),
-		async execute(_toolCallId, _params) {
-			const active = pi.getActiveTools();
-			const added = !active.includes("subagent");
-			if (added) pi.setActiveTools([...active, "subagent"]);
-			return {
-				content: [{ type: "text", text: "subagent tool activated." }],
-				details: { added },
-			};
-		},
-	});
-
-	pi.on("session_start", () => {
-		// subagent starts inactive; load_subagent_tool (kept active) turns it on
-		// on demand, so its (relatively heavy) schema isn't in every request.
-		const initialTools = pi.getActiveTools().filter((name) => name !== "subagent");
-		pi.setActiveTools([...new Set(initialTools)]);
-	});
-
-	pi.registerTool({
 		name: "subagent",
 		label: "Subagent",
 		description: [
