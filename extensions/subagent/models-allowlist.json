@@ -2,32 +2,66 @@
   "enabled": true,
   "allowed": [
     {
-      "id": "github-copilot/gpt-5.3-codex",
-      "thinkingLevels":["low", "medium", "high", "xhigh"],
-      "intelligence_index": 44.26,
-      "coding_index": 53.1,
-      "cost_per_task": 0.80,
-      "output_tokens_per_second": 87.84,
-      "description": "Tremendous mileage for most tasks by simply changing thinking levels. Extremely cheap on a pure per-token basis"
+      "id": "github-copilot/gpt-5.6-luna",
+      "levels": {
+        "low": {
+          "artificialAnalysis": {
+            "intelligence": 33.26,
+            "coding": 44.16,
+            "cost": 0.06
+          }
+        },
+        "medium": {
+          "artificialAnalysis": {
+            "intelligence": 38.05,
+            "coding": 50.73,
+            "cost": 0.07
+          }
+        },
+        "high": {
+          "artificialAnalysis": {
+            "intelligence": 46.06,
+            "coding": 63.34,
+            "cost": 0.12
+          }
+        },
+        "max": {
+          "artificialAnalysis": {
+            "intelligence": 51.24,
+            "coding": 71.45,
+            "cost": 0.28
+          }
+        }
+      },
+      "description": "Capable everyday model"
     },
     {
-      "id": "github-copilot/gpt-5.5",
-      "thinkingLevels":["low", "medium", "high", "xhigh"],
-      "intelligence_index": 54.83,
-      "coding_index": 74.89,
-      "cost_per_task": 0.86,
-      "output_tokens_per_second": 67.59,
-      "description": "SOTA powerhouse"
-    },
-    {
-      "id": "github-copilot/claude-opus-4.8",
-      "thinkingLevels":["low", "medium", "high", "xhigh"],
-      "intelligence_index": 55.69,
-      "coding_index": 74.25,
-      "cost_per_task": 1.79,
-      "output_tokens_per_second": 69.08,
-      "description": "never use unless the user explicitly requests it"
+      "id": "github-copilot/gpt-5.6-terra",
+      "levels": {
+        "low": {
+          "artificialAnalysis": {
+            "intelligence": 40.47,
+            "coding": 58.09,
+            "cost": 0.15
+          }
+        },
+        "medium": {
+          "artificialAnalysis": {
+            "intelligence": 45.57,
+            "coding": 64.74,
+            "cost": 0.18
+          }
+        },
+        "high": {
+          "artificialAnalysis": {
+            "intelligence": 48.95,
+            "coding": 67.14,
+            "cost": 0.34
+          }
+        }
+      },
+      "description": "Higher tier model than Luna"
     }
   ],
-  "default": "github-copilot/gpt-5.3-codex"
+  "default": "github-copilot/gpt-5.6-luna"
 }

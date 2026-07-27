@@ -1,0 +1,14 @@
+{
+  "enabled": true,
+  "allowed": [
+    {
+      "id": "provider/model-id",
+      "levels": {
+        "high": {},
+        "xhigh": {}
+      },
+      "description": "Why this model is allowed"
+    }
+  ],
+  "default": "provider/model-id"
+}
