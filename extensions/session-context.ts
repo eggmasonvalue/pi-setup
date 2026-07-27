@@ -28,8 +28,9 @@
  *
  * Trigger:
  * - The message is injected at the first agent run only for a fresh session:
- *   a startup session with no entries, or a `/new` session. It is not injected
- *   after `/resume`, `/reload`, or `/fork`.
+ *   a startup or `/new` session with no prior conversation messages. Session
+ *   metadata such as model and thinking-level selections is ignored. It is not
+ *   injected after `/resume`, `/reload`, or `/fork`.
  *
  * Toggle:
  * - `/session-context on|off|status` persists the enabled flag to
@@ -159,7 +160,9 @@ export default function (pi: ExtensionAPI) {
 	pi.on("session_start", (event, ctx) => {
 		isFreshSession =
 			(event.reason === "startup" || event.reason === "new") &&
-			ctx.sessionManager.getEntries().length === 0;
+			ctx.sessionManager
+				.getEntries()
+				.every((entry) => entry.type !== "message" && entry.type !== "custom_message");
 	});
 
 	pi.on("before_agent_start", (_event, ctx) => {
