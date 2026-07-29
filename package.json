@@ -1,14 +1,27 @@
 {
-  "name": "uig55220-pi-setup",
-  "version": "1.0.0",
+  "name": "eggmasonvalue-pi-setup",
+  "version": "1.1.0",
   "private": true,
   "description": "Pi setup package for git distribution",
   "keywords": [
     "pi-package"
   ],
+  "dependencies": {
+    "@plannotator/pi-extension": "latest",
+    "pi-annotations": "latest",
+    "pi-system-prompt": "latest"
+  },
+  "bundledDependencies": [
+    "@plannotator/pi-extension",
+    "pi-annotations",
+    "pi-system-prompt"
+  ],
   "pi": {
     "extensions": [
-      "./extensions"
+      "./extensions",
+      "./node_modules/@plannotator/pi-extension",
+      "./node_modules/pi-annotations/annotate.ts",
+      "./node_modules/pi-system-prompt/extensions"
     ],
     "skills": [
       "./skills"

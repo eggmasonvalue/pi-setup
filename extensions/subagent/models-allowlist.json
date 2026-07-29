@@ -60,7 +60,7 @@
           }
         }
       },
-      "description": "Higher tier model than Luna"
+      "description": "Larger model family than Luna"
     }
   ],
   "default": "github-copilot/gpt-5.6-luna"

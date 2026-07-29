@@ -9,7 +9,7 @@ import * as fs from "node:fs";
 import * as path from "node:path";
 
 const ALLOWLIST_PATH = path.join(import.meta.dirname, "models-allowlist.json");
-const LEADERBOARD_URL = "https://deepswe.datacurve.ai/artifacts/v1/leaderboard-live.json";
+const LEADERBOARD_URL = "https://deepswe.datacurve.ai/artifacts/v1.1/leaderboard-live.json";
 
 type Level = { deepSWE?: { pass?: number; cost?: number }; [key: string]: unknown };
 type Entry = { id: string; levels?: Record<string, Level>; [key: string]: unknown };

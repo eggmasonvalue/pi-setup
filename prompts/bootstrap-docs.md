@@ -92,7 +92,7 @@ the todo body, PR, commit message, or final response.
    imperatives (lint, format, test) and verify they run. Wire into pre-commit
    or CI only if the project already uses those.
 8. **Set up Markdown linting** (always, because these docs are Markdown). Add
-   `markdownlint` (for example `markdownlint-cli2`) with sensible config, and
+   `markdownlint` (for example `pymarkdownlnt` or `markdownlint-cli2`) with sensible config, and
    ensure `AGENTS.md`, `README.md`, and everything under `context/` pass. Add
    the lint command to `CONVENTIONS.md`. Lint and fix docs you created so they
    start clean.
