@@ -7,19 +7,16 @@
     "pi-package"
   ],
   "dependencies": {
-    "@plannotator/pi-extension": "latest",
     "pi-annotations": "latest",
     "pi-system-prompt": "latest"
   },
   "bundledDependencies": [
-    "@plannotator/pi-extension",
     "pi-annotations",
     "pi-system-prompt"
   ],
   "pi": {
     "extensions": [
       "./extensions",
-      "./node_modules/@plannotator/pi-extension",
       "./node_modules/pi-annotations/annotate.ts",
       "./node_modules/pi-system-prompt/extensions"
     ],
