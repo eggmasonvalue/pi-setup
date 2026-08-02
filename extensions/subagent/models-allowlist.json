@@ -4,13 +4,6 @@
     {
       "id": "github-copilot/gpt-5.6-luna",
       "levels": {
-        "low": {
-          "artificialAnalysis": {
-            "intelligence": 33.26,
-            "coding": 44.16,
-            "cost": 0.06
-          }
-        },
         "medium": {
           "artificialAnalysis": {
             "intelligence": 38.05,
@@ -34,34 +27,7 @@
         }
       },
       "description": "Capable everyday model"
-    },
-    {
-      "id": "github-copilot/gpt-5.6-terra",
-      "levels": {
-        "low": {
-          "artificialAnalysis": {
-            "intelligence": 40.47,
-            "coding": 58.09,
-            "cost": 0.15
-          }
-        },
-        "medium": {
-          "artificialAnalysis": {
-            "intelligence": 45.57,
-            "coding": 64.74,
-            "cost": 0.18
-          }
-        },
-        "high": {
-          "artificialAnalysis": {
-            "intelligence": 48.95,
-            "coding": 67.14,
-            "cost": 0.34
-          }
-        }
-      },
-      "description": "Larger model family than Luna"
-    }
+    }  
   ],
   "default": "github-copilot/gpt-5.6-luna"
 }
