@@ -7,6 +7,9 @@ sessions/
 npm/
 node_modules/
 
+# local extension configuration
+extensions/subagent/models-allowlist.json
+
 # misc
 .DS_Store
 Thumbs.db
