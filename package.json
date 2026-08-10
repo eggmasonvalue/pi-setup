@@ -6,31 +6,9 @@
   "keywords": [
     "pi-package"
   ],
-  "dependencies": {
-    "pi-annotations": "latest",
-    "pi-system-prompt": "latest",
-    "pi-toggle-skills": "latest"
-  },
-  "bundledDependencies": [
-    "pi-annotations",
-    "pi-system-prompt",
-    "pi-toggle-skills"
-  ],
   "pi": {
-    "extensions": [
-      "./extensions",
-      "./node_modules/pi-annotations/annotate.ts",
-      "./node_modules/pi-system-prompt/extensions",
-      "./node_modules/pi-toggle-skills/toggle-skills.ts"
-    ],
-    "skills": [
-      "./skills"
-    ],
-    "prompts": [
-      "./prompts"
-    ],
-    "themes": [
-      "./themes"
-    ]
+    "extensions": ["./extensions"],
+    "prompts": ["./prompts"],
+    "themes": ["./themes"]
   }
 }
