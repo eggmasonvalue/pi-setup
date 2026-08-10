@@ -7,7 +7,7 @@ Pi package containing the extensions, prompt templates, and themes maintained in
 Prerequisites: Git, Node.js, Pi, and (on Windows) Git Bash. From Git Bash, run:
 
 ```bash
-tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp"; exit $status
+tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp";
 ```
 
 The bootstrap is safe to rerun. It installs the unpinned package sources, merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, removes old resource-directory links, and links the installed package's `APPEND_SYSTEM.md` into the global Pi directory. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
