@@ -4,7 +4,19 @@ Pi package containing the extensions, skills, and themes maintained in this repo
 
 ## Bootstrap a machine
 
-Prerequisites: Git, Node.js, Pi, and (on Windows) Git Bash. Before bootstrapping a machine, add the following to the user npm configuration file shown by `npm config get userconfig`:
+Prerequisites: Git, Node.js, Pi, and (on Windows) Git Bash. The npm settings below require **npm 11.17.0 or newer**. Check first:
+
+```bash
+npm --version
+```
+
+If the version is older, upgrade npm (or install a newer Node.js release) before continuing. For example, on a Node installation that supports npm 11:
+
+```bash
+npm install --global npm@11.17.0
+```
+
+Then add the following to the user npm configuration file shown by `npm config get userconfig`:
 
 ```ini
 min-release-age=7
@@ -13,6 +25,8 @@ legacy-peer-deps=true
 ```
 
 The first setting delays newly published registry packages. The trusted `@earendil-works/pi-*` namespace is exempt because Pi supplies those host packages itself; Git-distributed extensions may mention them as dev or peer dependencies even though they should not be installed into the extension tree. `legacy-peer-deps` prevents npm from auto-installing those host peers during Git package setup. Keep any existing registry authentication lines in that file unchanged.
+
+`min-release-age` was added before the exclusion setting. npm 11.10.0 through 11.16.x therefore recognize `min-release-age` but warn that `min-release-age-exclude` is unknown and do not apply the exclusion. This is an npm version issue, not a Linux-specific `.npmrc` syntax issue; `min-release-age-exclude[]` is the supported repeated-value syntax in npm 11.17.0+.
 
 These are per-machine npm settings; repeat this step on every machine.
 
