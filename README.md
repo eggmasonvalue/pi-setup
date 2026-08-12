@@ -4,7 +4,19 @@ Pi package containing the extensions, skills, and themes maintained in this repo
 
 ## Bootstrap a machine
 
-Prerequisites: Git, Node.js, Pi, and (on Windows) Git Bash. From Git Bash, run:
+Prerequisites: Git, Node.js, Pi, and (on Windows) Git Bash. Before bootstrapping a machine, add the following to the user npm configuration file shown by `npm config get userconfig`:
+
+```ini
+min-release-age=7
+min-release-age-exclude[]=@earendil-works/pi-*
+legacy-peer-deps=true
+```
+
+The first setting delays newly published registry packages. The trusted `@earendil-works/pi-*` namespace is exempt because Pi supplies those host packages itself; Git-distributed extensions may mention them as dev or peer dependencies even though they should not be installed into the extension tree. `legacy-peer-deps` prevents npm from auto-installing those host peers during Git package setup. Keep any existing registry authentication lines in that file unchanged.
+
+These are per-machine npm settings; repeat this step on every machine.
+
+From Git Bash, run:
 
 ```bash
 tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp";

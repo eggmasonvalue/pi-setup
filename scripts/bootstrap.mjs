@@ -20,13 +20,17 @@ const managedSources = [
   "git:github.com/monotykamary/pi-toggle-skills",
   "git:github.com/patelparth3/pi-annotations",
   "git:github.com/jandrikus/pi-system-prompt",
-  // Remove the previous npm entries when migrating existing machines.
-  "npm:pi-toggle-skills",
-  "npm:pi-annotations",
-  "npm:pi-system-prompt",
   "npm:agent-browser",
   "git:github.com/vercel-labs/skills",
   "git:github.com/anthropics/skills",
+];
+
+// Sources previously managed by this setup. They are removed during the
+// settings merge but are not installed again during migration.
+const legacySources = [
+  "npm:pi-toggle-skills",
+  "npm:pi-annotations",
+  "npm:pi-system-prompt",
 ];
 
 const desiredPackages = [
@@ -73,7 +77,7 @@ function mergeSettings() {
   }
 
   const existing = Array.isArray(settings.packages) ? settings.packages : [];
-  const managed = new Set(managedSources);
+  const managed = new Set([...managedSources, ...legacySources]);
   settings.packages = [
     ...existing.filter((entry) => !managed.has(sourceOf(entry))),
     ...desiredPackages,
@@ -136,10 +140,9 @@ function linkAppendSystem() {
 function main() {
   console.log(`Configuring Pi under ${agentDir}`);
   for (const source of managedSources) {
-    // Vercel's repository has a dev-only `prepare: husky` hook. Pi installs
-    // git package dependencies with devDependencies omitted, so that hook is
-    // unusable on a fresh checkout. Skills do not need repository lifecycle
-    // scripts; suppress them for this resource-only package.
+    // Vercel's repository has a dev-only `prepare: husky` hook that is
+    // unusable when Pi installs with devDependencies omitted. Its skills do
+    // not need repository lifecycle scripts.
     const env = source === "git:github.com/vercel-labs/skills"
       ? { npm_config_ignore_scripts: "true" }
       : {};
