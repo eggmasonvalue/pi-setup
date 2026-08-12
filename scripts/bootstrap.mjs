@@ -19,7 +19,6 @@ const managedSources = [
   "git:github.com/eggmasonvalue/pi-subagent",
   "git:github.com/monotykamary/pi-toggle-skills",
   "git:github.com/patelparth3/pi-annotations",
-  "git:github.com/jandrikus/pi-system-prompt",
   "npm:agent-browser",
   "git:github.com/vercel-labs/skills",
   "git:github.com/anthropics/skills",
@@ -31,6 +30,7 @@ const legacySources = [
   "npm:pi-toggle-skills",
   "npm:pi-annotations",
   "npm:pi-system-prompt",
+  "git:github.com/jandrikus/pi-system-prompt",
 ];
 
 const desiredPackages = [
@@ -38,7 +38,6 @@ const desiredPackages = [
   "git:github.com/eggmasonvalue/pi-subagent",
   "git:github.com/monotykamary/pi-toggle-skills",
   "git:github.com/patelparth3/pi-annotations",
-  "git:github.com/jandrikus/pi-system-prompt",
   "npm:agent-browser",
   {
     source: "git:github.com/vercel-labs/skills",
