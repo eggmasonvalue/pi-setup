@@ -22,9 +22,9 @@ From Git Bash, run:
 tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp";
 ```
 
-The bootstrap is safe to rerun. It installs the unpinned package sources, merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, removes old resource-directory links, and links the installed package's `APPEND_SYSTEM.md` into the global Pi directory. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
+The bootstrap is safe to rerun. It installs the unpinned package sources, merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
 
-On Windows, creating the `APPEND_SYSTEM.md` file symlink may require Developer Mode or a terminal with the `SeCreateSymbolicLinkPrivilege` privilege. The bootstrap stops with an actionable error rather than silently replacing it with a stale copy.
+On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlinks may require Developer Mode or a terminal with the `SeCreateSymbolicLinkPrivilege` privilege. The bootstrap stops with an actionable error if it cannot create either link.
 
 ## Managed top-level packages
 
@@ -59,4 +59,4 @@ pi update --extensions
 agent-browser --version
 ```
 
-Restarting Pi or using `/reload` loads updated resources. The setup package owns only `extensions/`, `skills/`, `themes/`, and `APPEND_SYSTEM.md`
+Restarting Pi or using `/reload` loads updated resources. The setup package owns only `extensions/`, `skills/`, `themes/`, `AGENTS.md`, and `APPEND_SYSTEM.md`

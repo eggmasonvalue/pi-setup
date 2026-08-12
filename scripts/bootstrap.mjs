@@ -12,7 +12,7 @@ import { homedir } from "node:os";
 const agentDir = resolve(process.env.PI_CODING_AGENT_DIR || join(homedir(), ".pi", "agent"));
 const settingsPath = join(agentDir, "settings.json");
 const npmBin = join(agentDir, "npm", "node_modules", ".bin");
-const appendPath = join(agentDir, "APPEND_SYSTEM.md");
+const managedFiles = ["AGENTS.md", "APPEND_SYSTEM.md"];
 
 const managedSources = [
   "git:github.com/eggmasonvalue/pi-setup",
@@ -111,29 +111,26 @@ function removeOldResourceLink(name) {
   }
 }
 
-function linkAppendSystem() {
-  const installed = join(agentDir, "git", "github.com", "eggmasonvalue", "pi-setup", "APPEND_SYSTEM.md");
+function linkManagedFile(name) {
+  const installed = join(agentDir, "git", "github.com", "eggmasonvalue", "pi-setup", name);
   if (!existsSync(installed)) {
-    console.warn(`APPEND_SYSTEM.md target not found yet: ${installed}`);
+    console.warn(`${name} target not found yet: ${installed}`);
     return;
   }
+
+  const target = join(agentDir, name);
   let existing;
-  try { existing = lstatSync(appendPath); } catch (error) {
+  try { existing = lstatSync(target); } catch (error) {
     if (error.code !== "ENOENT") throw error;
   }
-  if (existing?.isSymbolicLink()) {
-    rmSync(appendPath, { force: true });
-  } else if (existing) {
-    const backup = `${appendPath}.local-backup`;
-    if (!existsSync(backup)) renameSync(appendPath, backup);
-    else throw new Error(`A regular ${appendPath} already exists and ${backup} is also present; refusing to overwrite either file.`);
-    console.warn(`Preserved the previous regular file as ${backup}`);
+  if (existing) {
+    rmSync(target, { force: true });
   }
   try {
-    symlinkSync(installed, appendPath, "file");
-    console.log(`Linked ${appendPath} -> ${installed}`);
+    symlinkSync(installed, target, "file");
+    console.log(`Linked ${target} -> ${installed}`);
   } catch (error) {
-    throw new Error(`Could not create the APPEND_SYSTEM.md symlink. Enable Windows Developer Mode or run with symlink privileges, then rerun bootstrap. Original error: ${error.message}`);
+    throw new Error(`Could not create the ${name} symlink. Enable Windows Developer Mode or run with symlink privileges, then rerun bootstrap. Original error: ${error.message}`);
   }
 }
 
@@ -151,7 +148,7 @@ function main() {
   mergeSettings();
   mkdirSync(npmBin, { recursive: true });
   for (const name of ["extensions", "skills", "prompts", "themes"]) removeOldResourceLink(name);
-  linkAppendSystem();
+  for (const name of managedFiles) linkManagedFile(name);
   console.log("\nPi setup bootstrap complete.");
   console.log("Run: pi update --extensions");
   console.log("One-time browser setup (if not already done): agent-browser install");
