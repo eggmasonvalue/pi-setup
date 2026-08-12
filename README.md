@@ -18,9 +18,9 @@ On Windows, creating the `APPEND_SYSTEM.md` file symlink may require Developer M
 
 - `git:github.com/eggmasonvalue/pi-setup`
 - `git:github.com/eggmasonvalue/pi-subagent`
-- `npm:pi-annotations`
-- `npm:pi-system-prompt`
-- `npm:pi-toggle-skills`
+- `git:github.com/monotykamary/pi-toggle-skills`
+- `git:github.com/patelparth3/pi-annotations`
+- `git:github.com/jandrikus/pi-system-prompt`
 - `npm:agent-browser`
 - `git:github.com/vercel-labs/skills` (only `skills/find-skills`)
 - `git:github.com/anthropics/skills` (only `skills/skill-creator`)
