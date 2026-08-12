@@ -8,7 +8,7 @@
   ],
   "pi": {
     "extensions": ["./extensions"],
-    "prompts": ["./prompts"],
+    "skills": ["./skills"],
     "themes": ["./themes"]
   }
 }

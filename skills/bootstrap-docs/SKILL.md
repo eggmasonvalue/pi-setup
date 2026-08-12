@@ -1,7 +1,7 @@
 ---
-description: Bootstrap the standard agent-maintained documentation system onto
-  this project
-argument-hint: "[--force]"
+name: bootstrap-docs
+description: Bootstrap the standard agent-maintained documentation system onto a project/migrate legacy documentation into the target structure.
+disable-model-invocation: true
 ---
 
 # Bootstrap documentation system
@@ -36,8 +36,7 @@ else rots, so do not write it.
 
 Use the folder name `context/` (no leading dot). Never use a hidden/dot folder
 for these docs: `rg` skips hidden files by default, which would hide the
-most-read docs from the most-used search tool. If a legacy `.context/` exists,
-run `git mv` to `context/` and fix references.
+most-read docs from the most-used search tool. Detect legacy documentation directories and migrate their contents into the target `context/` directory. In particular, if the former `.context/` layout exists, run `git mv` to `context/` and fix references.
 
 ## Decision-log bar
 
@@ -78,16 +77,15 @@ the todo body, PR, commit message, or final response.
 4. Make `CONVENTIONS.md` pure imperatives. Test each line: if it needs a
    "because", it may be a decision; move rationale to `DECISIONS.md` only if it
    crosses the decision-log bar. Otherwise keep the convention terse.
-5. Delete redundant or obsolete docs: any `CHANGELOG.md` under `context/`,
-   feature/status files (for example `DESIGN.md`), `OVERVIEW.md` if it only
-   duplicates README, and stray per-tool agent files (`GEMINI.md`,
-   `CLAUDE.md`). Fold their substance into `AGENTS.md` so it is the single
-   universal guide. Use `git mv`/`git rm` when the repo is git-tracked.
+5. Remove redundant or obsolete legacy documentation after mining its durable
+   content. Do not retain parallel legacy documentation artifacts. Fold useful
+   project guidance from generic tool-specific files such as `GEMINI.md` and
+   `CLAUDE.md` into `AGENTS.md` so it is the single universal guide. Use
+   `git mv`/`git rm` when the repo is git-tracked.
 6. Fix all cross-references after renames or deletes (grep old filenames).
 7. **Set up linting/formatting.** Ensure the project has a linter + formatter
    appropriate to its stack (for example `ruff` for Python,
-   ESLint + Prettier for JS/TS, `golangci-lint` for Go,
-   `clippy`/`rustfmt` for Rust). If none exists, add and configure it; if one
+   ESLint + Prettier for JS/TS, `clippy`/`rustfmt` for Rust). If none exists, add and configure it; if one
    exists, keep it. Add standard run commands to `CONVENTIONS.md` as
    imperatives (lint, format, test) and verify they run. Wire into pre-commit
    or CI only if the project already uses those.
@@ -139,5 +137,7 @@ Status: active | superseded by <date/title>
 
 - Do not commit. Leave changes staged/unstaged for review and report exactly
   what you created, deleted, and mined.
-- If the project already has this system in place, only reconcile drift —
-  unless `$1` is `--force`, in which case rebuild from scratch.
+- If the project already has this system in place, only reconcile drift. Rebuild
+  it from scratch only when the user explicitly asks for a full rebuild.
+- Treat any text supplied with the invocation as additional user context and
+  instructions for this run.

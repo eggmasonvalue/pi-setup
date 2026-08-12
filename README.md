@@ -1,6 +1,6 @@
 # pi-setup
 
-Pi package containing the extensions, prompt templates, and themes maintained in this repository. Independently maintained extensions and skills are installed as separate top-level Pi packages.
+Pi package containing the extensions, skills, and themes maintained in this repository. Other independently maintained extensions and skills are installed as separate top-level Pi packages.
 
 ## Bootstrap a machine
 
@@ -47,4 +47,4 @@ pi update --extensions
 agent-browser --version
 ```
 
-Restarting Pi or using `/reload` loads updated resources. The setup package owns only `extensions/`, `prompts/`, `themes/`, and `APPEND_SYSTEM.md`; skills and the subagent extension are not copied into this repository.
+Restarting Pi or using `/reload` loads updated resources. The setup package owns only `extensions/`, `skills/`, `themes/`, and `APPEND_SYSTEM.md`
