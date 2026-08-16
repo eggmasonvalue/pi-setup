@@ -127,7 +127,6 @@ function buildContextMessage(cwd: string): string {
 		`- Date/time: ${now.toString()}`,
 		`- OS: ${describePlatform()}`,
 		`- Shell: ${describeShell()}`,
-		"- Paths: use shell-specific path syntax only in bash tool commands; use native OS path syntax for every other tool call.",
 		`- Line endings: ${describeLineEndings(cwd)}`,
 	].join("\n");
 }
