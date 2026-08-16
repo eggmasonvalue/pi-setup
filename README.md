@@ -65,7 +65,7 @@ agent-browser --version
 
 `agent-browser install` is a separate one-time per-machine browser/runtime setup step. The bootstrap reports the command; run it if needed.
 
-`/system-prompt` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. This repository keeps a copy of that extension for development, but does not load it, so the command is registered once. Rerunning bootstrap removes the older `git:github.com/jandrikus/pi-system-prompt` package.
+`/system-prompt` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. Rerunning bootstrap installs that package and removes the older `git:github.com/jandrikus/pi-system-prompt` and `npm:pi-system-prompt` entries.
 
 ## Verify
 
