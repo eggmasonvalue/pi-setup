@@ -7,7 +7,7 @@
     "pi-package"
   ],
   "pi": {
-    "extensions": ["./extensions"],
+    "extensions": ["./extensions", "!./extensions/system-prompt.ts"],
     "skills": ["./skills"],
     "themes": ["./themes"]
   }

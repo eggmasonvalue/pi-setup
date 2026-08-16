@@ -17,6 +17,7 @@ const managedFiles = ["AGENTS.md", "APPEND_SYSTEM.md"];
 const managedSources = [
   "git:github.com/eggmasonvalue/pi-setup",
   "git:github.com/eggmasonvalue/pi-subagent",
+  "git:github.com/eggmasonvalue/pi-system-prompt-viewer",
   "git:github.com/monotykamary/pi-toggle-skills",
   "git:github.com/patelparth3/pi-annotations",
   "npm:agent-browser",
@@ -36,6 +37,7 @@ const legacySources = [
 const desiredPackages = [
   "git:github.com/eggmasonvalue/pi-setup",
   "git:github.com/eggmasonvalue/pi-subagent",
+  "git:github.com/eggmasonvalue/pi-system-prompt-viewer",
   "git:github.com/monotykamary/pi-toggle-skills",
   "git:github.com/patelparth3/pi-annotations",
   "npm:agent-browser",

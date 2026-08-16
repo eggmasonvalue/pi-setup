@@ -1,3 +1,10 @@
+/**
+ * /system-prompt — show the assembled system prompt and active tool schemas.
+ *
+ * Snapshots the prompt on agent_start, after other before_agent_start handlers
+ * have rewritten it. The command handler would only see the base prompt,
+ * because Pi clears a per-turn override after the run.
+ */
 import type {
   ExtensionAPI,
   ExtensionCommandContext,
@@ -11,20 +18,20 @@ import {
   wrapTextWithAnsi,
 } from "@earendil-works/pi-tui";
 
+const CHROME_ROWS = 7;
+
 export default function systemPromptViewer(pi: ExtensionAPI) {
   let lastPrompt: string | undefined;
 
-  // agent_start fires after every before_agent_start handler has run, so this
-  // captures the prompt actually sent to the model rather than only its base form.
   pi.on("agent_start", (_event, ctx) => {
     lastPrompt = ctx.getSystemPrompt();
   });
 
-  pi.registerCommand("system-prompt-viewer", {
+  pi.registerCommand("system-prompt", {
     description: "Show the current system prompt and active tool schemas",
     handler: async (_args: string, ctx: ExtensionCommandContext) => {
       if (ctx.mode !== "tui") {
-        ctx.ui.notify("/system-prompt-viewer is available in interactive Pi only.", "warning");
+        ctx.ui.notify("/system-prompt is available in interactive Pi only.", "warning");
         return;
       }
 
@@ -119,6 +126,7 @@ function styleFor(line: string): LineStyle {
 class SystemPromptViewer {
   private scrollOffset = 0;
   private copiedAt = 0;
+  private copiedTimer: ReturnType<typeof setTimeout> | undefined;
   private totalDisplayLines = 0;
   private readonly fullText: string;
 
@@ -143,9 +151,9 @@ class SystemPromptViewer {
       this.scrollOffset = Math.max(0, this.scrollOffset - 1);
     } else if (matchesKey(data, "down") || matchesKey(data, "j")) {
       this.scrollOffset = Math.min(maximumOffset, this.scrollOffset + 1);
-    } else if (matchesKey(data, "pageup")) {
+    } else if (matchesKey(data, "pageUp")) {
       this.scrollOffset = Math.max(0, this.scrollOffset - visible);
-    } else if (matchesKey(data, "pagedown")) {
+    } else if (matchesKey(data, "pageDown")) {
       this.scrollOffset = Math.min(maximumOffset, this.scrollOffset + visible);
     } else if (matchesKey(data, "home")) {
       this.scrollOffset = 0;
@@ -154,6 +162,7 @@ class SystemPromptViewer {
     } else if (matchesKey(data, "c")) {
       this.copyToClipboard();
     } else if (matchesKey(data, "escape") || matchesKey(data, "q")) {
+      this.dispose();
       this.done();
       return;
     } else {
@@ -209,7 +218,7 @@ class SystemPromptViewer {
   invalidate(): void {}
 
   private visibleLineCount(): number {
-    return Math.max(1, Math.floor(this.tui.terminal.rows * 0.92) - 6);
+    return Math.max(1, Math.floor(this.tui.terminal.rows * 0.92) - CHROME_ROWS);
   }
 
   private buildDisplayLines(width: number): DisplayLine[] {
@@ -227,6 +236,13 @@ class SystemPromptViewer {
     const base64 = Buffer.from(this.fullText, "utf-8").toString("base64");
     process.stdout.write(`\x1b]52;c;${base64}\x07`);
     this.copiedAt = Date.now();
+    clearTimeout(this.copiedTimer);
+    this.copiedTimer = setTimeout(() => this.tui.requestRender(), 2_000);
+  }
+
+  dispose(): void {
+    clearTimeout(this.copiedTimer);
+    this.copiedTimer = undefined;
   }
 }
 
