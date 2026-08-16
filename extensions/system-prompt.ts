@@ -28,7 +28,7 @@ export default function systemPromptViewer(pi: ExtensionAPI) {
   });
 
   pi.registerCommand("system-prompt", {
-    description: "Show the current system prompt and active tool schemas",
+    description: "Show the system prompt and tool definitions sent with the last run",
     handler: async (_args: string, ctx: ExtensionCommandContext) => {
       if (ctx.mode !== "tui") {
         ctx.ui.notify("/system-prompt is available in interactive Pi only.", "warning");
@@ -79,10 +79,10 @@ export default function systemPromptViewer(pi: ExtensionAPI) {
 }
 
 function formatToolSchemas(tools: ToolInfo[]): string[] {
-  if (tools.length === 0) return ["Active tool schemas (0 tools)", "", "No active tools."];
+  if (tools.length === 0) return ["Tool definitions (0 tools)", "", "No tools."];
 
   const lines = [
-    `Active tool schemas (${tools.length} tools; not part of the system prompt)`,
+    `Tool definitions (${tools.length} tools)`,
     "",
   ];
   for (const tool of tools) {
@@ -114,7 +114,7 @@ type LineStyle = "heading" | "bullet" | "section" | "tool" | "plain";
 
 function styleFor(line: string): LineStyle {
   if (line.startsWith("Available tools:") || line.startsWith("Guidelines:")) return "section";
-  if (line.startsWith("Active tool schemas")) return "section";
+  if (line.startsWith("Tool definitions")) return "section";
   if (line.startsWith("name:") || line.startsWith("  description:") || line.startsWith("  source:")) {
     return "tool";
   }
