@@ -44,9 +44,9 @@ On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlink
 
 - `git:github.com/eggmasonvalue/pi-setup`
 - `git:github.com/eggmasonvalue/pi-subagent`
+- `git:github.com/eggmasonvalue/pi-system-prompt-viewer`
 - `git:github.com/monotykamary/pi-toggle-skills`
 - `git:github.com/patelparth3/pi-annotations`
-- `git:github.com/jandrikus/pi-system-prompt`
 - `npm:agent-browser`
 - `git:github.com/vercel-labs/skills` (only `skills/find-skills`)
 - `git:github.com/anthropics/skills` (only `skills/skill-creator`)
@@ -64,6 +64,8 @@ agent-browser --version
 ```
 
 `agent-browser install` is a separate one-time per-machine browser/runtime setup step. The bootstrap reports the command; run it if needed.
+
+`/system-prompt` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. Rerunning bootstrap installs that package and removes the older `git:github.com/jandrikus/pi-system-prompt` and `npm:pi-system-prompt` entries.
 
 ## Verify
 
