@@ -65,7 +65,7 @@ agent-browser --version
 
 `agent-browser install` is a separate one-time per-machine browser/runtime setup step. The bootstrap reports the command; run it if needed.
 
-`/system-prompt` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. Rerunning bootstrap installs that package and removes the older `git:github.com/jandrikus/pi-system-prompt` and `npm:pi-system-prompt` entries.
+`/system-context` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. Rerunning bootstrap installs that package and removes the older `git:github.com/jandrikus/pi-system-prompt` and `npm:pi-system-prompt` entries.
 
 ## Optional: quickly creating a Pi subset
 
@@ -87,8 +87,8 @@ pi-work() {
   done
 
   # Keep selected independently-installed extensions.
-  [[ -f "$agent/git/github.com/eggmasonvalue/pi-system-prompt-viewer/extensions/system-prompt.ts" ]] &&
-    args+=(--extension "$agent/git/github.com/eggmasonvalue/pi-system-prompt-viewer/extensions/system-prompt.ts")
+  [[ -f "$agent/git/github.com/eggmasonvalue/pi-system-prompt-viewer/extensions/system-context.ts" ]] &&
+    args+=(--extension "$agent/git/github.com/eggmasonvalue/pi-system-prompt-viewer/extensions/system-context.ts")
 
   [[ -f "$agent/git/github.com/monotykamary/pi-toggle-skills/toggle-skills.ts" ]] &&
     args+=(--extension "$agent/git/github.com/monotykamary/pi-toggle-skills/toggle-skills.ts")
