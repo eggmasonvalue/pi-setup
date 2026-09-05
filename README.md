@@ -45,6 +45,7 @@ On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlink
 - `git:github.com/eggmasonvalue/pi-setup`
 - `git:github.com/eggmasonvalue/pi-subagent`
 - `git:github.com/eggmasonvalue/pi-system-prompt-viewer`
+- `git:github.com/trefeon/pi-freeflow`
 - `git:github.com/monotykamary/pi-toggle-skills`
 - `git:github.com/patelparth3/pi-annotations`
 - `npm:agent-browser`
@@ -89,6 +90,9 @@ pi-work() {
   # Keep selected independently-installed extensions.
   [[ -f "$agent/git/github.com/eggmasonvalue/pi-system-prompt-viewer/extensions/system-context.ts" ]] &&
     args+=(--extension "$agent/git/github.com/eggmasonvalue/pi-system-prompt-viewer/extensions/system-context.ts")
+
+  [[ -f "$agent/git/github.com/trefeon/pi-freeflow/extensions/index.ts" ]] &&
+    args+=(--extension "$agent/git/github.com/trefeon/pi-freeflow/extensions/index.ts")
 
   [[ -f "$agent/git/github.com/monotykamary/pi-toggle-skills/toggle-skills.ts" ]] &&
     args+=(--extension "$agent/git/github.com/monotykamary/pi-toggle-skills/toggle-skills.ts")
