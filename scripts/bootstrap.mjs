@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
  * Install the Pi setup and its independently managed packages.
- * This script deliberately changes only settings.packages and
- * settings.shellCommandPrefix.
+ * This script deliberately changes settings.packages,
+ * settings.shellCommandPrefix, and configures allowScripts for agent-browser
+ * in Pi's npm root.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
@@ -11,7 +12,9 @@ import { homedir } from "node:os";
 
 const agentDir = resolve(process.env.PI_CODING_AGENT_DIR || join(homedir(), ".pi", "agent"));
 const settingsPath = join(agentDir, "settings.json");
-const npmBin = join(agentDir, "npm", "node_modules", ".bin");
+const npmDir = join(agentDir, "npm");
+const npmPackageJsonPath = join(npmDir, "package.json");
+const npmBin = join(npmDir, "node_modules", ".bin");
 const managedFiles = ["AGENTS.md", "APPEND_SYSTEM.md"];
 
 const managedSources = [
@@ -137,8 +140,28 @@ function linkManagedFile(name) {
   }
 }
 
+function ensureNpmAllowScripts() {
+  mkdirSync(npmDir, { recursive: true });
+  let pkg = { name: "pi-extensions", private: true };
+  if (existsSync(npmPackageJsonPath)) {
+    try {
+      pkg = JSON.parse(readFileSync(npmPackageJsonPath, "utf8"));
+    } catch {
+      // Keep default
+    }
+  }
+  const allowScripts = pkg.allowScripts && typeof pkg.allowScripts === "object" ? pkg.allowScripts : {};
+  if (!allowScripts["agent-browser"]) {
+    pkg.allowScripts = { ...allowScripts, "agent-browser": true };
+    const temp = join(npmDir, `.package.${process.pid}.tmp`);
+    writeFileSync(temp, `${JSON.stringify(pkg, null, 2)}\n`, "utf8");
+    renameSync(temp, npmPackageJsonPath);
+  }
+}
+
 function main() {
   console.log(`Configuring Pi under ${agentDir}`);
+  ensureNpmAllowScripts();
   for (const source of managedSources) {
     // Vercel's repository has a dev-only `prepare: husky` hook that is
     // unusable when Pi installs with devDependencies omitted. Its skills do
