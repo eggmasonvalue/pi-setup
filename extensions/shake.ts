@@ -3,9 +3,8 @@ import type { AgentMessage, ExtensionAPI, ExtensionContext } from "@earendil-wor
 const SHAKE_ENTRY = "shake-boundary";
 type ReasoningMode = "full" | "text" | "none";
 
-const TOOL_ACTIVITY_START =
-	"[Historical tool activity removed by Shake. Tool definitions and outputs are unavailable; do not replay these calls.]";
-const TOOL_ACTIVITY_END = "[End historical tool activity]";
+const COMPACTED_SYSTEM_NOTE =
+	"[System note: Conversation history before this point has been deterministically compacted to conserve context. Past tool outputs have been pruned, and past tool calls are recorded above as [Executed: <tool> <args> — <status>].]";
 
 interface ShakeBoundary {
 	createdAt: string;
@@ -64,7 +63,7 @@ function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: Reas
 	const resultStatus = new Map<string, string>();
 	for (const message of messages) {
 		if (message.role === "toolResult") {
-			resultStatus.set(message.toolCallId, message.isError ? "failed" : "completed");
+			resultStatus.set(message.toolCallId, message.isError ? "fail" : "ok");
 		}
 	}
 
@@ -76,14 +75,12 @@ function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: Reas
 			projected.push({
 				role: "assistant",
 				content: [
-					{ type: "text", text: TOOL_ACTIVITY_START },
 					{
 						type: "text",
-						text: `bash ${message.command} — ${
+						text: `[Executed: bash ${message.command} — ${
 							message.cancelled ? "cancelled" : `exit ${message.exitCode ?? "unknown"}`
-						}`,
+						}]`,
 					},
-					{ type: "text", text: TOOL_ACTIVITY_END },
 				],
 				api: "shake",
 				provider: "shake",
@@ -104,7 +101,6 @@ function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: Reas
 
 		if (message.role === "assistant") {
 			const content: any[] = [];
-			let toolActivityOpen = false;
 			for (const block of message.content as any[]) {
 				if (block.type === "text") {
 					content.push(block);
@@ -116,17 +112,12 @@ function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: Reas
 					continue;
 				}
 				if (block.type === "toolCall") {
-					if (!toolActivityOpen) {
-						content.push({ type: "text", text: TOOL_ACTIVITY_START });
-						toolActivityOpen = true;
-					}
 					content.push({
 						type: "text",
-						text: describeToolCall(block, resultStatus.get(block.id) ?? "status unknown"),
+						text: `[Executed: ${describeToolCall(block, resultStatus.get(block.id) ?? "unknown")}]`,
 					});
 				}
 			}
-			if (toolActivityOpen) content.push({ type: "text", text: TOOL_ACTIVITY_END });
 
 			if (content.length === 0) continue;
 			projected.push({ ...message, content });
@@ -206,11 +197,11 @@ export default function shakeExtension(pi: ExtensionAPI) {
 	});
 
 	pi.registerCommand("shake", {
-		description: "Create a shaken session (default: text reasoning). Usage: /shake [full|text|none|status]",
+		description: "Create a shaken session (default: full reasoning). Usage: /shake [full|text|none|status]",
 		getArgumentCompletions: (prefix) => {
 			const options = [
-				{ value: "full", label: "full", description: "Keep readable reasoning and native reasoning state" },
-				{ value: "text", label: "text", description: "Keep readable reasoning only (default)" },
+				{ value: "full", label: "full", description: "Keep readable reasoning and native reasoning state (default)" },
+				{ value: "text", label: "text", description: "Keep readable reasoning only" },
 				{ value: "none", label: "none", description: "Remove historical reasoning" },
 				{ value: "status", label: "status", description: "Show Shake boundary details" },
 			];
@@ -223,7 +214,7 @@ export default function shakeExtension(pi: ExtensionAPI) {
 				return;
 			}
 
-			const reasoningMode: ReasoningMode = command === "" ? "text" : command as ReasoningMode;
+			const reasoningMode: ReasoningMode = command === "" ? "full" : (command as ReasoningMode);
 			if (reasoningMode !== "full" && reasoningMode !== "text" && reasoningMode !== "none") {
 				ctx.ui.notify("Usage: /shake [full|text|none|status]", "warning");
 				return;
@@ -254,6 +245,13 @@ export default function shakeExtension(pi: ExtensionAPI) {
 					sessionManager.appendThinkingLevelChange(sessionContext.thinkingLevel);
 					for (const message of projectedMessages) {
 						sessionManager.appendMessage(message as any);
+					}
+					if (projectedMessages.length > 0) {
+						sessionManager.appendMessage({
+							role: "user",
+							content: [{ type: "text", text: COMPACTED_SYSTEM_NOTE }],
+							timestamp: Date.now(),
+						} as any);
 					}
 					sessionManager.appendCustomEntry(SHAKE_ENTRY, newBoundary);
 				},
