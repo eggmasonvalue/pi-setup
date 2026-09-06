@@ -36,7 +36,7 @@ From Git Bash, run:
 tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp";
 ```
 
-The bootstrap is safe to rerun. It installs the unpinned package sources, merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
+The bootstrap is safe to rerun. It configures `allowScripts` for `agent-browser` in Pi's npm root (`~/.pi/agent/npm/package.json`), installs the unpinned package sources, merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
 
 On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlinks may require Developer Mode or a terminal with the `SeCreateSymbolicLinkPrivilege` privilege. The bootstrap stops with an actionable error if it cannot create either link.
 
