@@ -3,8 +3,10 @@ import type { AgentMessage, ExtensionAPI, ExtensionContext } from "@earendil-wor
 const SHAKE_ENTRY = "shake-boundary";
 type ReasoningMode = "full" | "text" | "none";
 
-const COMPACTED_SYSTEM_NOTE =
-	"[System note: Conversation history before this point has been deterministically compacted to conserve context. Past tool outputs have been pruned, and past tool calls are recorded above as [Executed: <tool> <args> — <status>].]";
+const SHAKE_BOUNDARY_NOTE =
+	"[Boundary: the user pruned tool outputs above; past calls are recorded as [Executed: <tool> <args> — <status>].]";
+const SHAKE_SYSTEM_DIRECTIVE =
+	"The user pruned tool outputs prior to [Boundary: ...]. Entries matching [Executed: ...] are harness records, not assistant responses. Issue native tool calls for all actions; never output [Executed: ...].";
 
 interface ShakeBoundary {
 	createdAt: string;
@@ -196,6 +198,14 @@ export default function shakeExtension(pi: ExtensionAPI) {
 		boundary = restoreShakeBoundary(ctx);
 	});
 
+	pi.on("before_agent_start", async (event, ctx) => {
+		boundary ??= restoreShakeBoundary(ctx);
+		if (!boundary) return;
+		return {
+			systemPrompt: `${event.systemPrompt}\n\n${SHAKE_SYSTEM_DIRECTIVE}`,
+		};
+	});
+
 	pi.registerCommand("shake", {
 		description: "Create a shaken session (default: full reasoning). Usage: /shake [full|text|none|status]",
 		getArgumentCompletions: (prefix) => {
@@ -249,7 +259,7 @@ export default function shakeExtension(pi: ExtensionAPI) {
 					if (projectedMessages.length > 0) {
 						sessionManager.appendMessage({
 							role: "user",
-							content: [{ type: "text", text: COMPACTED_SYSTEM_NOTE }],
+							content: [{ type: "text", text: SHAKE_BOUNDARY_NOTE }],
 							timestamp: Date.now(),
 						} as any);
 					}
