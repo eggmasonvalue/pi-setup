@@ -61,6 +61,22 @@ function describeToolCall(content: any, status: string): string {
 	return `${summary} — ${status}`;
 }
 
+function isShakeBoundaryMessage(message: AgentMessage): boolean {
+	if (message.role !== "user") return false;
+	let text: string | undefined;
+	if (typeof message.content === "string") {
+		text = message.content.trim();
+	} else if (Array.isArray(message.content) && message.content.length === 1 && message.content[0]?.type === "text") {
+		text = message.content[0].text.trim();
+	}
+	if (!text) return false;
+	return (
+		text === SHAKE_BOUNDARY_NOTE ||
+		text.startsWith("[Boundary: the user pruned tool outputs above;") ||
+		text.startsWith("[System note: Conversation history before this point has been deterministically compacted")
+	);
+}
+
 function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: ReasoningMode): AgentMessage[] {
 	const resultStatus = new Map<string, string>();
 	for (const message of messages) {
@@ -72,6 +88,7 @@ function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: Reas
 	const projected: AgentMessage[] = [];
 	for (const message of messages) {
 		if (message.role === "toolResult") continue;
+		if (isShakeBoundaryMessage(message)) continue;
 
 		if (message.role === "bashExecution") {
 			projected.push({
@@ -180,9 +197,9 @@ function notifyBoundaryStatus(ctx: ExtensionContext, boundary: ShakeBoundary | u
 		return;
 	}
 
-	const source = boundary.sourceSession ? `\nOriginal session: ${boundary.sourceSession}` : "";
+	const source = boundary.sourceSession ? `\nSource session: ${boundary.sourceSession}` : "";
 	ctx.ui.notify(
-		`Shake: already applied\nReasoning: ${boundary.reasoningMode}\nCreated: ${boundary.createdAt}\nProjected messages: ${boundary.messageCount}${source}`,
+		`Shake: active\nReasoning: ${boundary.reasoningMode}\nCreated: ${boundary.createdAt}\nProjected messages: ${boundary.messageCount}${source}`,
 		"info",
 	);
 }
@@ -220,6 +237,7 @@ export default function shakeExtension(pi: ExtensionAPI) {
 		handler: async (args, ctx) => {
 			const command = (args ?? "").trim().toLowerCase();
 			if (command === "status") {
+				boundary ??= restoreShakeBoundary(ctx);
 				notifyBoundaryStatus(ctx, boundary);
 				return;
 			}
@@ -227,11 +245,6 @@ export default function shakeExtension(pi: ExtensionAPI) {
 			const reasoningMode: ReasoningMode = command === "" ? "full" : (command as ReasoningMode);
 			if (reasoningMode !== "full" && reasoningMode !== "text" && reasoningMode !== "none") {
 				ctx.ui.notify("Usage: /shake [full|text|none|status]", "warning");
-				return;
-			}
-
-			if (boundary) {
-				ctx.ui.notify("This session has already been shaken; raw history will not be restored.", "warning");
 				return;
 			}
 
