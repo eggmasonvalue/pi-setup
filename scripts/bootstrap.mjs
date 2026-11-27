@@ -23,7 +23,6 @@ const managedSources = [
   "git:github.com/eggmasonvalue/pi-system-prompt-viewer",
   "git:github.com/trefeon/pi-freeflow",
   "git:github.com/monotykamary/pi-toggle-skills",
-  "git:github.com/patelparth3/pi-annotations",
   "npm:agent-browser",
   "git:github.com/vercel-labs/skills",
   "git:github.com/anthropics/skills",
@@ -31,12 +30,7 @@ const managedSources = [
 
 // Sources previously managed by this setup. They are removed during the
 // settings merge but are not installed again during migration.
-const legacySources = [
-  "npm:pi-toggle-skills",
-  "npm:pi-annotations",
-  "npm:pi-system-prompt",
-  "git:github.com/jandrikus/pi-system-prompt",
-];
+const legacySources = [];
 
 const desiredPackages = [
   "git:github.com/eggmasonvalue/pi-setup",
@@ -44,7 +38,6 @@ const desiredPackages = [
   "git:github.com/eggmasonvalue/pi-system-prompt-viewer",
   "git:github.com/trefeon/pi-freeflow",
   "git:github.com/monotykamary/pi-toggle-skills",
-  "git:github.com/patelparth3/pi-annotations",
   "npm:agent-browser",
   {
     source: "git:github.com/vercel-labs/skills",

@@ -1,34 +1,31 @@
-import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
+import { getAgentDir, type ExtensionAPI, type ExtensionContext, type WorkingIndicatorOptions } from "@earendil-works/pi-coding-agent";
+import type { AutocompleteItem } from "@earendil-works/pi-tui";
 import * as fs from "node:fs";
-import { homedir } from "node:os";
 import * as path from "node:path";
 
 /**
- * Vibe Spinner — swaps pi's "Working..." message for something that
- * actually reflects a personality: paddock/pitlane chaos, hardwood
- * highlights, pitch/court/crease lore, and value-investing brainrot
- * (Bill Miller cosplay, Mauboussin base-rate sermons, Mr. Market's mood
- * swings).
+ * Vibe Spinner — swaps pi's "Working..." message and working indicator glyph
+ * for mode-themed personality: paddock/pitlane chaos, hardwood highlights,
+ * pitch/court/crease lore, and value-investing brainrot (Bill Miller cosplay,
+ * Mauboussin base-rate sermons, Mr. Market's mood swings).
  *
  * Four pools. Edit the arrays below directly to add or change lines —
  * that's the primary way to configure content.
  *
- * Mode configuration lives in pi's own global settings.json
- * (~/.pi/agent/settings.json, or PI_CODING_AGENT_DIR/settings.json) under
- * a "vibeSpinner" key, e.g.:
+ * Mode configuration lives in settings.json (project overrides global via
+ * `pi.getSettings()`) under a "vibeSpinner" key, e.g.:
  *
  *   { "vibeSpinner": { "mode": "motorsport" } }
  *
  *   - `/vibe-spinner [motorsport|basketball|other-sports|stocks|mixed]`
- *     switches the pool live AND persists it to settings.json (only the
- *     "vibeSpinner.mode" field is touched — every other setting in the
- *     file is left untouched). Run with no args to see the current mode
- *     and pool sizes.
- *   - Falls back to "mixed" (every pool combined) if settings.json has
- *     no vibeSpinner.mode.
+ *     switches the pool and indicator live AND persists to global settings.json
+ *     (only `vibeSpinner.mode` is touched). Run with no args to inspect the
+ *     current mode and pool sizes.
+ *   - Falls back to "mixed" (every pool combined) if unset.
  */
 
-type Mode = "motorsport" | "basketball" | "other-sports" | "stocks" | "mixed";
+const MODES = ["motorsport", "basketball", "other-sports", "stocks", "mixed"] as const;
+type Mode = (typeof MODES)[number];
 
 // ---------------------------------------------------------------------------
 // 🏎️🏍️ Motorsport pool — F1 + MotoGP
@@ -190,21 +187,91 @@ const STOCKS_MESSAGES: string[] = [
 ];
 
 // ---------------------------------------------------------------------------
-// settings.json integration (global scope only)
+// Mode-themed working indicators (1-cell glyphs styled with active theme)
 // ---------------------------------------------------------------------------
-function getGlobalSettingsPath(): string {
-	const agentDir = process.env.PI_CODING_AGENT_DIR || path.join(homedir(), ".pi", "agent");
-	return path.join(agentDir, "settings.json");
+function getModeIndicator(mode: Mode, theme: ExtensionContext["ui"]["theme"]): WorkingIndicatorOptions {
+	switch (mode) {
+		case "motorsport":
+			// F1 start-light gantry -> lights out / revving pulse
+			return {
+				frames: [
+					theme.fg("dim", "○"),
+					theme.fg("error", "●"),
+					theme.fg("warning", "●"),
+					theme.fg("success", "●"),
+					theme.fg("accent", "◉"),
+					theme.fg("dim", "○"),
+				],
+				intervalMs: 140,
+			};
+		case "basketball":
+			// Dribble / shot arc
+			return {
+				frames: [
+					theme.fg("warning", "⡀"),
+					theme.fg("warning", "⠄"),
+					theme.fg("warning", "⠂"),
+					theme.fg("warning", "⠁"),
+					theme.fg("accent", "●"),
+					theme.fg("warning", "⠂"),
+					theme.fg("warning", "⠄"),
+					theme.fg("warning", "⡀"),
+				],
+				intervalMs: 95,
+			};
+		case "other-sports":
+			// Spinning ball / rally orbit
+			return {
+				frames: [
+					theme.fg("success", "◐"),
+					theme.fg("accent", "◓"),
+					theme.fg("success", "◑"),
+					theme.fg("accent", "◒"),
+				],
+				intervalMs: 110,
+			};
+		case "stocks":
+			// Volatile ticker sparkline: rip up green, mean-revert red
+			return {
+				frames: [
+					theme.fg("error", "▁"),
+					theme.fg("error", "▂"),
+					theme.fg("warning", "▃"),
+					theme.fg("success", "▅"),
+					theme.fg("success", "▆"),
+					theme.fg("success", "█"),
+					theme.fg("success", "▇"),
+					theme.fg("warning", "▅"),
+					theme.fg("error", "▃"),
+					theme.fg("error", "▂"),
+				],
+				intervalMs: 110,
+			};
+		case "mixed":
+			// Rotating theme-accent diamond pulse
+			return {
+				frames: [
+					theme.fg("dim", "◇"),
+					theme.fg("muted", "◈"),
+					theme.fg("accent", "◆"),
+					theme.fg("warning", "✦"),
+					theme.fg("accent", "◆"),
+					theme.fg("muted", "◈"),
+				],
+				intervalMs: 120,
+			};
+	}
 }
 
-function readVibeSpinnerMode(): Mode | undefined {
-	try {
-		const raw = fs.readFileSync(getGlobalSettingsPath(), "utf-8");
-		const settings = JSON.parse(raw) as { vibeSpinner?: { mode?: string } };
-		return isValidMode(settings.vibeSpinner?.mode) ? settings.vibeSpinner.mode : undefined;
-	} catch {
-		return undefined;
-	}
+// ---------------------------------------------------------------------------
+// settings.json integration
+// ---------------------------------------------------------------------------
+function getGlobalSettingsPath(): string {
+	return path.join(getAgentDir(), "settings.json");
+}
+
+function isValidMode(value: unknown): value is Mode {
+	return typeof value === "string" && (MODES as readonly string[]).includes(value);
 }
 
 /** Persist only `vibeSpinner.mode`, leaving every other settings.json field untouched. */
@@ -214,7 +281,6 @@ function writeVibeSpinnerMode(mode: Mode): void {
 	try {
 		settings = JSON.parse(fs.readFileSync(settingsPath, "utf-8"));
 	} catch {
-		// Missing or unparsable file — start fresh rather than clobbering silently.
 		settings = {};
 	}
 	const vibeSpinner = (settings.vibeSpinner as Record<string, unknown> | undefined) ?? {};
@@ -223,22 +289,17 @@ function writeVibeSpinnerMode(mode: Mode): void {
 	fs.writeFileSync(settingsPath, `${JSON.stringify(settings, null, 2)}\n`);
 }
 
-function isValidMode(value: string | undefined): value is Mode {
-	return (
-		value === "motorsport" ||
-		value === "basketball" ||
-		value === "other-sports" ||
-		value === "stocks" ||
-		value === "mixed"
-	);
-}
-
 function pickRandom(pool: string[]): string {
-	return pool[Math.floor(Math.random() * pool.length)];
+	return pool[Math.floor(Math.random() * pool.length)]!;
 }
 
 export default function vibeSpinnerExtension(pi: ExtensionAPI) {
-	let mode: Mode = readVibeSpinnerMode() ?? "mixed";
+	let mode: Mode = "mixed";
+
+	const readConfiguredMode = (): Mode => {
+		const configured = (pi.getSettings() as { vibeSpinner?: { mode?: unknown } }).vibeSpinner?.mode;
+		return isValidMode(configured) ? configured : "mixed";
+	};
 
 	const currentPool = (): string[] => {
 		switch (mode) {
@@ -255,17 +316,44 @@ export default function vibeSpinnerExtension(pi: ExtensionAPI) {
 		}
 	};
 
-	pi.on("turn_start", async (_event, ctx) => {
-		ctx.ui.setWorkingMessage(pickRandom(currentPool()));
+	const applyIndicator = (ctx: ExtensionContext) => {
+		if (ctx.mode !== "tui") return;
+		ctx.ui.setWorkingIndicator(getModeIndicator(mode, ctx.ui.theme));
+	};
+
+	pi.on("session_start", (_event, ctx) => {
+		mode = readConfiguredMode();
+		applyIndicator(ctx);
 	});
 
-	pi.on("turn_end", async (_event, ctx) => {
+	pi.on("turn_start", (_event, ctx) => {
+		if (ctx.mode !== "tui") return;
+		ctx.ui.setWorkingMessage(pickRandom(currentPool()));
+		ctx.ui.setWorkingIndicator(getModeIndicator(mode, ctx.ui.theme));
+	});
+
+	pi.on("turn_end", (_event, ctx) => {
+		if (ctx.mode !== "tui") return;
 		ctx.ui.setWorkingMessage(); // restore default for the next idle beat
+	});
+
+	pi.on("session_shutdown", (_event, ctx) => {
+		if (ctx.mode !== "tui") return;
+		ctx.ui.setWorkingMessage();
+		ctx.ui.setWorkingIndicator();
 	});
 
 	pi.registerCommand("vibe-spinner", {
 		description:
 			"Switch the working-spinner vibe: motorsport, basketball, other-sports, stocks, or mixed (persists to settings.json)",
+		getArgumentCompletions: (prefix: string): AutocompleteItem[] | null => {
+			const normalized = prefix.trim().toLowerCase();
+			const matches = MODES.filter((m) => m.startsWith(normalized)).map((m) => ({
+				value: m,
+				label: m,
+			}));
+			return matches.length > 0 ? matches : null;
+		},
 		handler: async (args, ctx) => {
 			const requested = args?.trim().toLowerCase();
 			if (!requested) {
@@ -280,6 +368,7 @@ export default function vibeSpinnerExtension(pi: ExtensionAPI) {
 				return;
 			}
 			mode = requested;
+			applyIndicator(ctx);
 			try {
 				writeVibeSpinnerMode(mode);
 				ctx.ui.notify(`Vibe spinner mode set to: ${mode} (saved to settings.json)`, "info");
