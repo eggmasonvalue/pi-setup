@@ -1,295 +1,117 @@
-import type { AgentMessage, ExtensionAPI, ExtensionContext } from "@earendil-works/pi-coding-agent";
+import { buildSessionContext, type ExtensionAPI, type SessionContext } from "@earendil-works/pi-coding-agent";
 
-const SHAKE_ENTRY = "shake-boundary";
-type ReasoningMode = "full" | "text" | "none";
+type AgentMessage = SessionContext["messages"][number];
 
-const SHAKE_BOUNDARY_NOTE =
-	"[Boundary: the user pruned tool outputs above; past calls are recorded as [Executed: <tool> <args> — <status>].]";
-const SHAKE_SYSTEM_DIRECTIVE =
-	"The user pruned tool outputs prior to [Boundary: ...]. Entries matching [Executed: ...] are harness records, not assistant responses. Issue native tool calls for all actions; never output [Executed: ...].";
+const SHAKE_MARKER = "shake: deterministic condensed compaction";
 
-interface ShakeBoundary {
-	createdAt: string;
-	sourceSession?: string;
-	messageCount: number;
-	reasoningMode: ReasoningMode;
+// Read by future models that know nothing about Shake; keep it self-explanatory.
+const PREAMBLE =
+	"Earlier conversation, condensed. Tool outputs were removed; each tool call is a one-line record `[tool] summary → outcome`. The calls ran and their effects, such as file edits, persist. Rerun tools when you need their output.";
+const THINKING_LABEL = "Assistant's thinking summary";
+const THINKING_NOTE = `[${THINKING_LABEL}] lines are short summaries of the assistant's reasoning written for the user to read, not the reasoning itself.`;
+
+export interface CondenseOptions {
+	/** Include the readable thinking summaries shown in the transcript. Set via `"shake": { "thinking": true }` in settings.json. */
+	thinking?: boolean;
 }
 
-function restoreShakeBoundary(ctx: ExtensionContext): ShakeBoundary | undefined {
-	let boundary: ShakeBoundary | undefined;
-	for (const entry of ctx.sessionManager.getBranch()) {
-		if (entry.type !== "custom" || entry.customType !== SHAKE_ENTRY) continue;
-		const data = entry.data as ShakeBoundary | undefined;
-		if (
-			typeof data?.createdAt === "string" &&
-			typeof data.messageCount === "number" &&
-			(data.reasoningMode === "full" || data.reasoningMode === "text" || data.reasoningMode === "none")
-		) {
-			boundary = data;
-		}
-	}
-	return boundary;
+function record(tool: string, summary: string, outcome: string | undefined): string {
+	return `[${tool}]${summary ? ` ${summary}` : ""}${outcome ? ` → ${outcome}` : ""}`;
 }
 
-function stringifyMetadata(value: unknown): string | undefined {
+function summarizeArgs(name: string, args: Record<string, unknown> | undefined): string {
+	if (!args || typeof args !== "object") return "";
+	if (name === "bash" && typeof args.description === "string") return args.description;
+	const path = ["path", "file", "filePath"].find((key) => typeof args[key] === "string");
+	if (path) return String(args[path]);
+	if (Array.isArray(args.paths)) return args.paths.join(", ");
+	if (typeof args.command === "string") return args.command;
+	if (typeof args.query === "string") return JSON.stringify(args.query);
+	if (typeof args.action === "string") return args.action;
 	try {
-		const text = JSON.stringify(value);
-		return text && text !== "{}" ? text : undefined;
+		const text = JSON.stringify(args);
+		return text && text !== "{}" ? text : "";
 	} catch {
-		return undefined;
+		return "";
 	}
 }
 
-function describeToolCall(content: any, status: string): string {
-	const name = typeof content.name === "string" ? content.name : "unknown";
-	const args = content.arguments as Record<string, unknown> | undefined;
-	let summary = name;
-
-	if (args && typeof args === "object") {
-		const path = ["path", "file", "filePath"].find((key) => typeof args[key] === "string");
-		if (path) summary = `${name} ${args[path]}`;
-		else if (Array.isArray(args.paths)) summary = `${name} ${args.paths.join(", ")}`;
-		else if (typeof args.command === "string") summary = `${name} ${args.command}`;
-		else if (typeof args.query === "string") summary = `${name} ${JSON.stringify(args.query)}`;
-		else if (typeof args.action === "string") summary = `${name} ${args.action}`;
-		else {
-			const serialized = stringifyMetadata(args);
-			if (serialized) summary = `${name} ${serialized}`;
-		}
-	}
-
-	return `${summary} — ${status}`;
+function bashOutcome(exitCode: number | undefined, cancelled: boolean, output: string): string | undefined {
+	if (cancelled) return "aborted";
+	if (exitCode === undefined) return "no result";
+	if (exitCode !== 0) return `exit ${exitCode}`;
+	return output.trim() ? undefined : "no output";
 }
 
-function isShakeBoundaryMessage(message: AgentMessage): boolean {
-	if (message.role !== "user") return false;
-	let text: string | undefined;
-	if (typeof message.content === "string") {
-		text = message.content.trim();
-	} else if (Array.isArray(message.content) && message.content.length === 1 && message.content[0]?.type === "text") {
-		text = message.content[0].text.trim();
-	}
-	if (!text) return false;
-	return (
-		text === SHAKE_BOUNDARY_NOTE ||
-		text.startsWith("[Boundary: the user pruned tool outputs above;") ||
-		text.startsWith("[System note: Conversation history before this point has been deterministically compacted")
-	);
+function textOf(content: string | readonly { type: string; text?: string }[]): string {
+	if (typeof content === "string") return content.trim();
+	return content
+		.flatMap((block) => (block.type === "text" && block.text ? [block.text] : []))
+		.join("\n")
+		.trim();
 }
 
-function projectHistoricalMessages(messages: AgentMessage[], reasoningMode: ReasoningMode): AgentMessage[] {
-	const resultStatus = new Map<string, string>();
+/** Condense history into text: tool calls become one-line records; tool outputs and images are dropped, reasoning unless opted in. */
+export function condense(messages: AgentMessage[], { thinking = false }: CondenseOptions = {}): string {
+	const outcomes = new Map<string, string | undefined>();
 	for (const message of messages) {
-		if (message.role === "toolResult") {
-			resultStatus.set(message.toolCallId, message.isError ? "fail" : "ok");
-		}
+		if (message.role !== "toolResult") continue;
+		const outcome = (message.details as { outcome?: unknown } | undefined)?.outcome;
+		outcomes.set(message.toolCallId, typeof outcome === "string" ? outcome : message.isError ? "error" : undefined);
 	}
 
-	const projected: AgentMessage[] = [];
+	const lines = [thinking ? `${PREAMBLE} ${THINKING_NOTE}` : PREAMBLE, ""];
+	const line = (label: string, text: string) => text && lines.push(`[${label}]: ${text}`);
 	for (const message of messages) {
-		if (message.role === "toolResult") continue;
-		if (isShakeBoundaryMessage(message)) continue;
-
-		if (message.role === "bashExecution") {
-			projected.push({
-				role: "assistant",
-				content: [
-					{
-						type: "text",
-						text: `[Executed: bash ${message.command} — ${
-							message.cancelled ? "cancelled" : `exit ${message.exitCode ?? "unknown"}`
-						}]`,
-					},
-				],
-				api: "shake",
-				provider: "shake",
-				model: "shake",
-				usage: {
-					input: 0,
-					output: 0,
-					cacheRead: 0,
-					cacheWrite: 0,
-					totalTokens: 0,
-					cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-				},
-				stopReason: "stop",
-				timestamp: message.timestamp,
-			});
-			continue;
-		}
-
-		if (message.role === "assistant") {
-			const content: any[] = [];
-			for (const block of message.content as any[]) {
-				if (block.type === "text") {
-					content.push(block);
-					continue;
-				}
-				if (block.type === "thinking") {
-					if (reasoningMode === "full") content.push(block);
-					if (reasoningMode === "text") content.push({ type: "text", text: block.thinking });
-					continue;
-				}
-				if (block.type === "toolCall") {
-					content.push({
-						type: "text",
-						text: `[Executed: ${describeToolCall(block, resultStatus.get(block.id) ?? "unknown")}]`,
-					});
-				}
+		switch (message.role) {
+			case "user":
+				line("User", textOf(message.content));
+				break;
+			case "assistant": {
+				if (thinking)
+					for (const block of message.content)
+						if (block.type === "thinking" && !block.redacted) line(THINKING_LABEL, block.thinking.trim());
+				line("Assistant", textOf(message.content));
+				const calls = message.content.flatMap((block) =>
+					block.type === "toolCall"
+						? [record(block.name, summarizeArgs(block.name, block.arguments), outcomes.has(block.id) ? outcomes.get(block.id) : "no result")]
+						: [],
+				);
+				line("Tool calls", calls.join("; "));
+				break;
 			}
-
-			if (content.length === 0) continue;
-			projected.push({ ...message, content });
-			continue;
+			case "bashExecution": {
+				if (message.excludeFromContext) break;
+				const outcome = bashOutcome(message.exitCode, message.cancelled, message.output);
+				line("User ran", `${message.command}${outcome ? ` → ${outcome}` : ""}`);
+				break;
+			}
+			case "compactionSummary":
+			case "branchSummary":
+				line("Earlier summary", message.summary.trim());
+				break;
 		}
-
-		if (message.role === "compactionSummary") {
-			projected.push({
-				role: "assistant",
-				content: [{ type: "text", text: `[Earlier compaction summary]\n${message.summary}` }],
-				api: "shake",
-				provider: "shake",
-				model: "shake",
-				usage: {
-					input: 0,
-					output: 0,
-					cacheRead: 0,
-					cacheWrite: 0,
-					totalTokens: 0,
-					cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-				},
-				stopReason: "stop",
-				timestamp: message.timestamp,
-			});
-			continue;
-		}
-
-		if (message.role === "branchSummary") {
-			projected.push({
-				role: "assistant",
-				content: [{ type: "text", text: `[Earlier branch summary]\n${message.summary}` }],
-				api: "shake",
-				provider: "shake",
-				model: "shake",
-				usage: {
-					input: 0,
-					output: 0,
-					cacheRead: 0,
-					cacheWrite: 0,
-					totalTokens: 0,
-					cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-				},
-				stopReason: "stop",
-				timestamp: message.timestamp,
-			});
-			continue;
-		}
-
-		projected.push(message);
 	}
-
-	return projected;
-}
-
-function notifyBoundaryStatus(ctx: ExtensionContext, boundary: ShakeBoundary | undefined): void {
-	if (!boundary) {
-		ctx.ui.notify("Shake: not applied to this session", "info");
-		return;
-	}
-
-	const source = boundary.sourceSession ? `\nSource session: ${boundary.sourceSession}` : "";
-	ctx.ui.notify(
-		`Shake: active\nReasoning: ${boundary.reasoningMode}\nCreated: ${boundary.createdAt}\nProjected messages: ${boundary.messageCount}${source}`,
-		"info",
-	);
+	return lines.join("\n");
 }
 
 export default function shakeExtension(pi: ExtensionAPI) {
-	let boundary: ShakeBoundary | undefined;
-
-	pi.on("session_start", async (_event, ctx) => {
-		boundary = restoreShakeBoundary(ctx);
-	});
-
-	pi.on("session_tree", async (_event, ctx) => {
-		boundary = restoreShakeBoundary(ctx);
-	});
-
-	pi.on("before_agent_start", async (event, ctx) => {
-		boundary ??= restoreShakeBoundary(ctx);
-		if (!boundary) return;
-		return {
-			systemPrompt: `${event.systemPrompt}\n\n${SHAKE_SYSTEM_DIRECTIVE}`,
-		};
+	pi.on("session_before_compact", (event) => {
+		if (event.customInstructions !== SHAKE_MARKER) return;
+		const options = (pi.getSettings() as { shake?: CondenseOptions }).shake;
+		const summary = condense(buildSessionContext(event.branchEntries).messages, options);
+		// null keeps no earlier entries: SessionManager.appendCompaction stores `firstKeptEntryId ?? id`.
+		return { compaction: { summary, firstKeptEntryId: null as unknown as string, tokensBefore: event.preparation.tokensBefore } };
 	});
 
 	pi.registerCommand("shake", {
-		description: "Create a shaken session (default: full reasoning). Usage: /shake [full|text|none|status]",
-		getArgumentCompletions: (prefix) => {
-			const options = [
-				{ value: "full", label: "full", description: "Keep readable reasoning and native reasoning state (default)" },
-				{ value: "text", label: "text", description: "Keep readable reasoning only" },
-				{ value: "none", label: "none", description: "Remove historical reasoning" },
-				{ value: "status", label: "status", description: "Show Shake boundary details" },
-			];
-			return options.filter((option) => option.value.startsWith(prefix));
-		},
-		handler: async (args, ctx) => {
-			const command = (args ?? "").trim().toLowerCase();
-			if (command === "status") {
-				boundary ??= restoreShakeBoundary(ctx);
-				notifyBoundaryStatus(ctx, boundary);
-				return;
-			}
-
-			const reasoningMode: ReasoningMode = command === "" ? "full" : (command as ReasoningMode);
-			if (reasoningMode !== "full" && reasoningMode !== "text" && reasoningMode !== "none") {
-				ctx.ui.notify("Usage: /shake [full|text|none|status]", "warning");
-				return;
-			}
-
-			await ctx.waitForIdle();
-			const sessionFile = ctx.sessionManager.getSessionFile();
-			const sessionContext = ctx.sessionManager.buildSessionContext();
-			const projectedMessages = projectHistoricalMessages(sessionContext.messages, reasoningMode);
-			const newBoundary: ShakeBoundary = {
-				createdAt: new Date().toISOString(),
-				sourceSession: sessionFile,
-				messageCount: projectedMessages.length,
-				reasoningMode,
-			};
-
-			const result = await ctx.newSession({
-				parentSession: sessionFile,
-				setup: async (sessionManager) => {
-					if (sessionContext.model) {
-						sessionManager.appendModelChange(sessionContext.model.provider, sessionContext.model.modelId);
-					}
-					sessionManager.appendThinkingLevelChange(sessionContext.thinkingLevel);
-					for (const message of projectedMessages) {
-						sessionManager.appendMessage(message as any);
-					}
-					if (projectedMessages.length > 0) {
-						sessionManager.appendMessage({
-							role: "user",
-							content: [{ type: "text", text: SHAKE_BOUNDARY_NOTE }],
-							timestamp: Date.now(),
-						} as any);
-					}
-					sessionManager.appendCustomEntry(SHAKE_ENTRY, newBoundary);
-				},
-				withSession: async (replacementCtx) => {
-					replacementCtx.ui.notify(
-						`Shake complete (${reasoningMode} reasoning): ${projectedMessages.length} projected messages retained; raw history archived in the parent session.`,
-						"info",
-					);
-				},
+		description: "Compact the session deterministically: tool calls become one-line records, outputs are dropped",
+		handler: async (_args, ctx) => {
+			ctx.compact({
+				customInstructions: SHAKE_MARKER,
+				onComplete: () => ctx.ui.notify("Shaken. Full history stays available via /tree.", "info"),
+				onError: (error) => ctx.ui.notify(`Shake failed: ${error.message}`, "error"),
 			});
-
-			if (result.cancelled) {
-				ctx.ui.notify("Shake cancelled", "warning");
-				return;
-			}
 		},
 	});
 }

@@ -68,6 +68,10 @@ agent-browser --version
 
 `/system-context` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. Rerunning bootstrap installs that package and removes the older `git:github.com/jandrikus/pi-system-prompt` and `npm:pi-system-prompt` entries.
 
+## Extension docs
+
+- [Shake](docs/extensions/shake.md): `/shake` condenses a session without a summarizing model; `bash-description.ts` gives every bash call the description it keeps.
+
 ## Optional: quickly creating a Pi subset
 
 A subset is a convenient way to give a particular kind of session a deliberately smaller resource set. The example below is a work subset: it allows only skills from the current repository, keeps a few explicitly chosen utility extensions, and disables web search (`tavily-web.ts`) and the file-based todo/issue tracker (`todos.ts`). Copy it into `~/.bashrc`, then change the allowlist and exclusions to create another subset quickly:
