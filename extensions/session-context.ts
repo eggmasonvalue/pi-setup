@@ -36,7 +36,7 @@
  *
  * - `/session-context on|off|status` updates the live state and persists
  *   `sessionContext.enabled` to global `settings.json` (leaving all other
- *   fields untouched). Defaults to `true` when unset.
+ *   fields untouched). With no args it opens an on/off picker. Defaults to `true` when unset.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
@@ -145,7 +145,11 @@ export default function sessionContextExtension(pi: ExtensionAPI) {
 			return matches.length > 0 ? matches : null;
 		},
 		handler: async (args, ctx) => {
-			const arg = args?.trim().toLowerCase();
+			const arg = args?.trim().toLowerCase() ||
+				(ctx.hasUI
+					? await ctx.ui.select(`Session context (currently ${isEnabled() ? "on" : "off"})`, ["on", "off"])
+					: "status");
+			if (!arg) return;
 
 			if (arg === "on" || arg === "off") {
 				const next = arg === "on";

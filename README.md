@@ -35,7 +35,7 @@ From Git Bash, run:
 tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp";
 ```
 
-The bootstrap is safe to rerun. It configures `allowScripts` for `agent-browser` in Pi's npm root (`~/.pi/agent/npm/package.json`), merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, reconciles all configured packages in one pass with `pi update --extensions`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
+The bootstrap is safe to rerun. It configures `allowScripts` for `agent-browser` in Pi's npm root (`~/.pi/agent/npm/package.json`), merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, seeds any missing defaults for this repo's extension settings (`vibeSpinner.mode`, `sessionContext.enabled`, `shake.thinking`) without overwriting existing values, reconciles all configured packages in one pass with `pi update --extensions`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
 
 On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlinks may require Developer Mode or a terminal with the `SeCreateSymbolicLinkPrivilege` privilege. The bootstrap stops with an actionable error if it cannot create either link.
 
@@ -78,8 +78,8 @@ agent-browser --version
 | [`ask-user-questions.ts`](extensions/ask-user-questions.ts) | `ask_user_questions` tool for batch-collecting answers with per-question Note fields | Model-only, sequential TUI prompt |
 | [`tavily-web.ts`](extensions/tavily-web.ts) | `search_web` and `extract_web` tools backed by Tavily | Requires `TAVILY_API_KEY` |
 | [`cache-ttl-timer.ts`](extensions/cache-ttl-timer.ts) | Right-aligned `belowEditor` prompt-cache status & expiry bell, aware of Pi's `cacheWarming` | Uses `model.promptCache` TTL |
-| [`session-context.ts`](extensions/session-context.ts) | Injects one-time visible date/OS/shell/git line-ending context on fresh sessions | Toggle via `/session-context on\|off\|status` |
-| [`vibe-spinner.ts`](extensions/vibe-spinner.ts) | Custom working messages and mode-themed spinner glyphs (`motorsport`, `basketball`, `other-sports`, `stocks`, `mixed`) | Switch via `/vibe-spinner <mode>` |
+| [`session-context.ts`](extensions/session-context.ts) | Injects one-time visible date/OS/shell/git line-ending context on fresh sessions | Toggle via `/session-context` (picker) or `/session-context on\|off\|status` |
+| [`vibe-spinner.ts`](extensions/vibe-spinner.ts) | Custom working messages and mode-themed spinner glyphs (`motorsport`, `basketball`, `other-sports`, `stocks`, `mixed`) | Switch via `/vibe-spinner` (picker) or `/vibe-spinner <mode>` |
 | [`notify.ts`](extensions/notify.ts) | Rings terminal BEL (`\x07`) on `agent_settled` | Exports `ringBell` |
 | [`logo.ts`](extensions/logo.ts) | Rotating-pastel candle startup header, adapts to light/dark themes | State in `<agentDir>/logo-state.json` |
 

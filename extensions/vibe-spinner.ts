@@ -19,13 +19,15 @@ import * as path from "node:path";
  *
  *   - `/vibe-spinner [motorsport|basketball|other-sports|stocks|mixed]`
  *     switches the pool and indicator live AND persists to global settings.json
- *     (only `vibeSpinner.mode` is touched). Run with no args to inspect the
- *     current mode and pool sizes.
- *   - Falls back to "mixed" (every pool combined) if unset.
+ *     (only `vibeSpinner.mode` is touched). Run with no args to pick from a list
+ *     (Pi only shows argument completions after `/vibe-spinner <letter>`).
+ *   - Falls back to "mixed" (every pool combined) if unset. In "mixed", the
+ *     glyph follows whichever pool the line was picked from.
  */
 
 const MODES = ["motorsport", "basketball", "other-sports", "stocks", "mixed"] as const;
 type Mode = (typeof MODES)[number];
+type ThemedMode = Exclude<Mode, "mixed">;
 
 // ---------------------------------------------------------------------------
 // 🏎️🏍️ Motorsport pool — F1 + MotoGP
@@ -189,7 +191,7 @@ const STOCKS_MESSAGES: string[] = [
 // ---------------------------------------------------------------------------
 // Mode-themed working indicators (1-cell glyphs styled with active theme)
 // ---------------------------------------------------------------------------
-function getModeIndicator(mode: Mode, theme: ExtensionContext["ui"]["theme"]): WorkingIndicatorOptions {
+function getModeIndicator(mode: ThemedMode, theme: ExtensionContext["ui"]["theme"]): WorkingIndicatorOptions {
 	switch (mode) {
 		case "motorsport":
 			// F1 start-light gantry -> lights out / revving pulse
@@ -247,19 +249,6 @@ function getModeIndicator(mode: Mode, theme: ExtensionContext["ui"]["theme"]): W
 				],
 				intervalMs: 110,
 			};
-		case "mixed":
-			// Rotating theme-accent diamond pulse
-			return {
-				frames: [
-					theme.fg("dim", "◇"),
-					theme.fg("muted", "◈"),
-					theme.fg("accent", "◆"),
-					theme.fg("warning", "✦"),
-					theme.fg("accent", "◆"),
-					theme.fg("muted", "◈"),
-				],
-				intervalMs: 120,
-			};
 	}
 }
 
@@ -289,8 +278,18 @@ function writeVibeSpinnerMode(mode: Mode): void {
 	fs.writeFileSync(settingsPath, `${JSON.stringify(settings, null, 2)}\n`);
 }
 
-function pickRandom(pool: string[]): string {
-	return pool[Math.floor(Math.random() * pool.length)]!;
+const POOLS: Record<ThemedMode, string[]> = {
+	motorsport: MOTORSPORT_MESSAGES,
+	basketball: BASKETBALL_MESSAGES,
+	"other-sports": OTHER_SPORTS_MESSAGES,
+	stocks: STOCKS_MESSAGES,
+};
+
+/** Pick a line plus the pool it came from, so "mixed" can match the glyph to the line. */
+function pickVibe(mode: Mode): { source: ThemedMode; message: string } {
+	const sources = mode === "mixed" ? (Object.keys(POOLS) as ThemedMode[]) : [mode];
+	const entries = sources.flatMap((source) => POOLS[source].map((message) => ({ source, message })));
+	return entries[Math.floor(Math.random() * entries.length)]!;
 }
 
 export default function vibeSpinnerExtension(pi: ExtensionAPI) {
@@ -301,35 +300,15 @@ export default function vibeSpinnerExtension(pi: ExtensionAPI) {
 		return isValidMode(configured) ? configured : "mixed";
 	};
 
-	const currentPool = (): string[] => {
-		switch (mode) {
-			case "motorsport":
-				return MOTORSPORT_MESSAGES;
-			case "basketball":
-				return BASKETBALL_MESSAGES;
-			case "other-sports":
-				return OTHER_SPORTS_MESSAGES;
-			case "stocks":
-				return STOCKS_MESSAGES;
-			default:
-				return [...MOTORSPORT_MESSAGES, ...BASKETBALL_MESSAGES, ...OTHER_SPORTS_MESSAGES, ...STOCKS_MESSAGES];
-		}
-	};
-
-	const applyIndicator = (ctx: ExtensionContext) => {
-		if (ctx.mode !== "tui") return;
-		ctx.ui.setWorkingIndicator(getModeIndicator(mode, ctx.ui.theme));
-	};
-
-	pi.on("session_start", (_event, ctx) => {
+	pi.on("session_start", () => {
 		mode = readConfiguredMode();
-		applyIndicator(ctx);
 	});
 
 	pi.on("turn_start", (_event, ctx) => {
 		if (ctx.mode !== "tui") return;
-		ctx.ui.setWorkingMessage(pickRandom(currentPool()));
-		ctx.ui.setWorkingIndicator(getModeIndicator(mode, ctx.ui.theme));
+		const { source, message } = pickVibe(mode);
+		ctx.ui.setWorkingMessage(message);
+		ctx.ui.setWorkingIndicator(getModeIndicator(source, ctx.ui.theme));
 	});
 
 	pi.on("turn_end", (_event, ctx) => {
@@ -355,20 +334,14 @@ export default function vibeSpinnerExtension(pi: ExtensionAPI) {
 			return matches.length > 0 ? matches : null;
 		},
 		handler: async (args, ctx) => {
-			const requested = args?.trim().toLowerCase();
-			if (!requested) {
-				ctx.ui.notify(
-					`Vibe spinner mode: ${mode} (motorsport: ${MOTORSPORT_MESSAGES.length}, basketball: ${BASKETBALL_MESSAGES.length}, other-sports: ${OTHER_SPORTS_MESSAGES.length}, stocks: ${STOCKS_MESSAGES.length} lines)`,
-					"info",
-				);
-				return;
-			}
+			const requested = args?.trim().toLowerCase() ||
+				(ctx.hasUI ? await ctx.ui.select(`Vibe spinner mode (current: ${mode})`, [...MODES]) : undefined);
+			if (!requested) return;
 			if (!isValidMode(requested)) {
 				ctx.ui.notify("Usage: /vibe-spinner [motorsport|basketball|other-sports|stocks|mixed]", "error");
 				return;
 			}
 			mode = requested;
-			applyIndicator(ctx);
 			try {
 				writeVibeSpinnerMode(mode);
 				ctx.ui.notify(`Vibe spinner mode set to: ${mode} (saved to settings.json)`, "info");

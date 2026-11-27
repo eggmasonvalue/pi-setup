@@ -2,7 +2,8 @@
 /**
  * Install the Pi setup and its independently managed packages.
  * This script deliberately changes settings.packages,
- * settings.shellCommandPrefix, and configures allowScripts for agent-browser
+ * settings.shellCommandPrefix, seeds missing extension settings defaults,
+ * and configures allowScripts for agent-browser
  * in Pi's npm root, then reconciles packages via `pi update --extensions`.
  */
 import { execFileSync } from "node:child_process";
@@ -53,6 +54,14 @@ const desiredPackages = [
 
 const managedSources = desiredPackages.map(sourceOf);
 
+// Defaults for settings read by this repo's extensions. Written only when
+// absent so they are discoverable/editable, never overwriting user choices.
+const extensionSettingDefaults = {
+  vibeSpinner: { mode: "mixed" },
+  sessionContext: { enabled: true },
+  shake: { thinking: false },
+};
+
 function sourceOf(entry) {
   return typeof entry === "string" ? entry : entry?.source;
 }
@@ -95,6 +104,11 @@ function mergeSettings() {
   const prefix = typeof settings.shellCommandPrefix === "string" ? settings.shellCommandPrefix : "";
   if (!prefix.includes(".pi/agent/npm/node_modules/.bin")) {
     settings.shellCommandPrefix = prefix ? `${prefix}\n${pathCommand}` : pathCommand;
+  }
+
+  for (const [key, defaults] of Object.entries(extensionSettingDefaults)) {
+    const current = settings[key] && typeof settings[key] === "object" ? settings[key] : {};
+    settings[key] = { ...defaults, ...current };
   }
 
   const temp = join(agentDir, `.settings.${process.pid}.tmp`);

@@ -8,13 +8,11 @@ import {
 	type Model,
 } from "@earendil-works/pi-ai";
 import type { ExtensionAPI, ExtensionContext, Theme } from "@earendil-works/pi-coding-agent";
-import { truncateToWidth, visibleWidth } from "@earendil-works/pi-tui";
 import { ringBell } from "./notify";
 
 /**
- * Prompt-cache status indicator rendered as a right-aligned `belowEditor`
- * widget (sits cleanly between the editor and footer, directly above the
- * model name, without replacing Pi's built-in footer).
+ * Prompt-cache status indicator rendered via `ctx.ui.setStatus`, i.e. on the
+ * extension-status line below Pi's two built-in footer lines.
  *
  * States shown:
  * - `cache 4:32 ↻`        — warm, and Pi's built-in cache warmer is expected to refresh it
@@ -44,7 +42,7 @@ const WARMED_BADGE_MS = 15 * 1000;
 const COARSE_TICK_MS = 15 * 1000;
 const FINE_TICK_MS = 1000;
 
-const WIDGET_KEY = "cache-ttl";
+const STATUS_KEY = "cache-ttl";
 
 function formatRemaining(ms: number): string {
 	const totalSeconds = Math.max(0, Math.ceil(ms / 1000));
@@ -94,11 +92,6 @@ export default function cacheTtlTimerExtension(pi: ExtensionAPI) {
 	let activeModel: Model<Api> | undefined;
 	let lastCtx: ExtensionContext | undefined;
 
-	// Widget render callback reads currentText; requestRender triggers repaint without recreating the widget.
-	let widgetMounted = false;
-	let requestWidgetRender: (() => void) | undefined;
-	let renderText: ((theme: Theme) => string) | undefined;
-
 	const stopTimer = () => {
 		if (timeoutHandle) {
 			clearTimeout(timeoutHandle);
@@ -108,38 +101,11 @@ export default function cacheTtlTimerExtension(pi: ExtensionAPI) {
 
 	const unmount = (ctx?: ExtensionContext) => {
 		stopTimer();
-		renderText = undefined;
-		if (widgetMounted) {
-			widgetMounted = false;
-			requestWidgetRender = undefined;
-			(ctx ?? lastCtx)?.ui.setWidget(WIDGET_KEY, undefined);
-		}
+		(ctx ?? lastCtx)?.ui.setStatus(STATUS_KEY, undefined);
 	};
 
 	const paint = (ctx: ExtensionContext, builder: (theme: Theme) => string) => {
-		if (ctx.mode !== "tui") return;
-		renderText = builder;
-		if (!widgetMounted) {
-			widgetMounted = true;
-			ctx.ui.setWidget(
-				WIDGET_KEY,
-				(tui, theme) => {
-					requestWidgetRender = () => tui.requestRender();
-					return {
-						render(width: number): string[] {
-							if (!renderText) return [];
-							const content = truncateToWidth(renderText(theme), width, "");
-							const pad = Math.max(0, width - visibleWidth(content));
-							return [`${" ".repeat(pad)}${content}`];
-						},
-						invalidate() {},
-					};
-				},
-				{ placement: "belowEditor" },
-			);
-		} else {
-			requestWidgetRender?.();
-		}
+		if (ctx.mode === "tui") ctx.ui.setStatus(STATUS_KEY, builder(ctx.ui.theme));
 	};
 
 	const isAutoWarmingExpected = (ctx: ExtensionContext, now: number): boolean => {
