@@ -1,5 +1,4 @@
 import {
-	buildSessionContext,
 	createAgentSession,
 	createExtensionRuntime,
 	getMarkdownTheme,
@@ -11,7 +10,7 @@ import {
 	type ExtensionContext,
 	type ResourceLoader,
 } from "@earendil-works/pi-coding-agent";
-import { type AssistantMessage, type Message, type ThinkingLevel as AiThinkingLevel } from "@earendil-works/pi-ai";
+import { type AssistantMessage, type ThinkingLevel as AiThinkingLevel } from "@earendil-works/pi-ai";
 import {
 	Container,
 	Input,
@@ -25,6 +24,19 @@ import {
 	type OverlayHandle,
 	type TUI,
 } from "@earendil-works/pi-tui";
+
+/**
+ * BTW side-channel chat (`/btw` or `/btw <question>`).
+ *
+ * Opens a floating overlay running an ephemeral in-memory side session seeded
+ * with the current main conversation branch (including compaction/branch
+ * summaries), so you can ask quick side questions without polluting the main
+ * transcript. The side thread is persisted on the active branch as custom
+ * entries (`btw-thread-entry` / `btw-thread-reset`) and can optionally be
+ * summarized and injected back into the main conversation on close.
+ *
+ * See `docs/extensions/btw.md` for full details.
+ */
 
 const BTW_ENTRY_TYPE = "btw-thread-entry";
 const BTW_RESET_TYPE = "btw-thread-reset";
@@ -77,16 +89,9 @@ type ToolCallInfo = {
 	status: "running" | "done" | "error";
 };
 
-function stripDynamicSystemPromptFooter(systemPrompt: string): string {
-	return systemPrompt
-		.replace(/\nCurrent date and time:[^\n]*(?:\nCurrent working directory:[^\n]*)?$/u, "")
-		.replace(/\nCurrent working directory:[^\n]*$/u, "")
-		.trim();
-}
-
 function createBtwResourceLoader(ctx: ExtensionContext, appendSystemPrompt: string[] = [BTW_SYSTEM_PROMPT]): ResourceLoader {
 	const extensionsResult = { extensions: [], errors: [], runtime: createExtensionRuntime() };
-	const systemPrompt = stripDynamicSystemPromptFooter(ctx.getSystemPrompt());
+	const systemPrompt = ctx.getSystemPrompt();
 
 	return {
 		getExtensions: () => extensionsResult,
@@ -95,7 +100,9 @@ function createBtwResourceLoader(ctx: ExtensionContext, appendSystemPrompt: stri
 		getThemes: () => ({ themes: [], diagnostics: [] }),
 		getAgentsFiles: () => ({ agentsFiles: [] }),
 		getSystemPrompt: () => systemPrompt,
+		getSystemPromptSource: () => undefined,
 		getAppendSystemPrompt: () => appendSystemPrompt,
+		getAppendSystemPromptSources: () => [],
 		extendResources: () => {},
 		reload: async () => {},
 	};
@@ -131,7 +138,7 @@ function extractEventAssistantText(message: unknown): string {
 function getLastAssistantMessage(session: AgentSession): AssistantMessage | null {
 	for (let i = session.state.messages.length - 1; i >= 0; i--) {
 		const message = session.state.messages[i];
-		if (message.role === "assistant") {
+		if (message?.role === "assistant") {
 			return message as AssistantMessage;
 		}
 	}
@@ -139,46 +146,46 @@ function getLastAssistantMessage(session: AgentSession): AssistantMessage | null
 	return null;
 }
 
-function buildSeedMessages(ctx: ExtensionContext, thread: BtwDetails[]): Message[] {
-	const seed: Message[] = [];
-
-	try {
-		const contextMessages = buildSessionContext(ctx.sessionManager.getEntries(), ctx.sessionManager.getLeafId()).messages;
-		seed.push(...(contextMessages.filter((message) => "role" in message) as Message[]));
-	} catch {
-		// Ignore context seed failures and continue with an empty side thread.
-	}
+/**
+ * Build an in-memory SessionManager seeded with the main branch's active
+ * conversation plus any prior BTW turns. Pi's AgentSession reads canonical
+ * provider context from SessionManager (not `agent.state.messages`), so
+ * seeding the SessionManager directly ensures the side session actually sees
+ * the main conversation and previous BTW turns.
+ */
+function createSeededSessionManager(ctx: ExtensionContext, thread: BtwDetails[]): SessionManager {
+	const header = ctx.sessionManager.getHeader();
+	const branch = ctx.sessionManager.getBranch();
+	const preloaded = header ? [header, ...branch] : branch;
+	const sm = SessionManager.inMemory(ctx.cwd, undefined, preloaded.length > 0 ? preloaded : undefined);
 
 	for (const item of thread) {
-		seed.push(
-			{
-				role: "user",
-				content: [{ type: "text", text: item.question }],
-				timestamp: item.timestamp,
-			},
-			{
-				role: "assistant",
-				content: [{ type: "text", text: item.answer }],
-				provider: item.provider,
-				model: item.model,
-				api: ctx.model?.api ?? "openai-responses",
-				usage:
-					item.usage ??
-					{
-						input: 0,
-						output: 0,
-						cacheRead: 0,
-						cacheWrite: 0,
-						totalTokens: 0,
-						cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
-					},
-				stopReason: "stop",
-				timestamp: item.timestamp,
-			},
-		);
+		sm.appendMessage({
+			role: "user",
+			content: [{ type: "text", text: item.question }],
+			timestamp: item.timestamp,
+		});
+		sm.appendMessage({
+			role: "assistant",
+			content: [{ type: "text", text: item.answer }],
+			provider: item.provider,
+			model: item.model,
+			api: ctx.model?.api ?? "openai-responses",
+			usage:
+				item.usage ?? {
+					input: 0,
+					output: 0,
+					cacheRead: 0,
+					cacheWrite: 0,
+					totalTokens: 0,
+					cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
+				},
+			stopReason: "stop",
+			timestamp: item.timestamp,
+		});
 	}
 
-	return seed;
+	return sm;
 }
 
 function formatThread(thread: BtwDetails[]): string {
@@ -192,7 +199,6 @@ function notify(ctx: ExtensionContext | ExtensionCommandContext, message: string
 		ctx.ui.notify(message, level);
 	}
 }
-
 
 class BtwOverlay extends Container implements Focusable {
 	private readonly input: Input;
@@ -327,13 +333,12 @@ class BtwOverlay extends Container implements Focusable {
 	override render(width: number): string[] {
 		const dialogWidth = Math.max(56, Math.min(width, Math.floor(width * 0.9)));
 		const innerWidth = Math.max(40, dialogWidth - 2);
-		const terminalRows = process.stdout.rows ?? 30;
+		const terminalRows = this.tui.terminal.rows || process.stdout.rows || 30;
 		const dialogHeight = Math.max(16, Math.min(30, Math.floor(terminalRows * 0.75)));
 		const chromeHeight = 7;
 		const transcriptHeight = Math.max(6, dialogHeight - chromeHeight);
 		this.transcriptHeight = transcriptHeight;
 
-		// Markdown renders to innerWidth already — no manual wrapping needed
 		const transcript = this.getTranscript(innerWidth, this.theme);
 		this.transcriptTotalLines = transcript.length;
 		const maxScroll = this.getMaxScroll();
@@ -343,11 +348,7 @@ class BtwOverlay extends Container implements Focusable {
 		const transcriptPadding = Math.max(0, transcriptHeight - visibleTranscript.length);
 
 		const status = this.getStatus();
-
-		const previousFocused = this.input.focused;
-		this.input.focused = false;
 		const inputLine = this.input.render(innerWidth)[0] ?? "";
-		this.input.focused = previousFocused;
 
 		const lines = [
 			this.borderLine(innerWidth, "top"),
@@ -365,21 +366,24 @@ class BtwOverlay extends Container implements Focusable {
 
 		lines.push(this.theme.fg("borderMuted", `├${"─".repeat(innerWidth)}┤`));
 		lines.push(this.frameLine(this.theme.fg("warning", status), innerWidth));
-		lines.push(
-			`${this.theme.fg("borderMuted", "│")}${inputLine}${this.theme.fg("borderMuted", "│")}`,
-		);
+		lines.push(`${this.theme.fg("borderMuted", "│")}${inputLine}${this.theme.fg("borderMuted", "│")}`);
 		const scrollInfo =
 			this.transcriptTotalLines > this.transcriptHeight
 				? ` · ${Math.min(this.transcriptTotalLines, startIndex + 1)}-${Math.min(this.transcriptTotalLines, startIndex + this.transcriptHeight)}/${this.transcriptTotalLines}`
 				: "";
-		lines.push(this.frameLine(this.theme.fg("dim", `Enter submit · Esc close · PgUp/PgDn/Home/End scroll${scrollInfo}`), innerWidth));
+		lines.push(
+			this.frameLine(
+				this.theme.fg("dim", `Enter submit · Esc close · ↑↓/PgUp/PgDn/Home/End scroll${scrollInfo}`),
+				innerWidth,
+			),
+		);
 		lines.push(this.borderLine(innerWidth, "bottom"));
 
 		return lines;
 	}
 }
 
-export default function (pi: ExtensionAPI) {
+export default function btwExtension(pi: ExtensionAPI) {
 	let thread: BtwDetails[] = [];
 	let pendingQuestion: string | null = null;
 	let pendingAnswer = "";
@@ -392,8 +396,6 @@ export default function (pi: ExtensionAPI) {
 	let activeSideSession: SideSessionRuntime | null = null;
 	let overlayRefreshTimer: ReturnType<typeof setTimeout> | null = null;
 
-	const mdTheme = getMarkdownTheme();
-
 	function getModelKey(ctx: ExtensionContext): string {
 		const model = ctx.model;
 		return model ? `${model.provider}/${model.id}` : "none";
@@ -402,10 +404,9 @@ export default function (pi: ExtensionAPI) {
 	function renderMarkdownLines(text: string, width: number): string[] {
 		if (!text) return [];
 		try {
-			const md = new Markdown(text, 0, 0, mdTheme);
-			return md.render(width);
+			const md = new Markdown(text, 0, 0, getMarkdownTheme());
+			return [...md.render(width)];
 		} catch {
-			// Fall back to plain text wrapping if Markdown rendering fails
 			return text.split("\n").flatMap((line) => {
 				if (!line) return [""];
 				const wrapped: string[] = [];
@@ -422,19 +423,23 @@ export default function (pi: ExtensionAPI) {
 		const a = args as Record<string, unknown>;
 		switch (toolName) {
 			case "bash":
-				return typeof a.command === "string" ? truncateToWidth(a.command.split("\n")[0], 50, "…") : "";
+				return typeof a.command === "string" ? truncateToWidth(a.command.split("\n")[0]!, 50, "…") : "";
 			case "read":
 			case "write":
 			case "edit":
 				return typeof a.path === "string" ? a.path : "";
 			default: {
 				const first = Object.values(a)[0];
-				return typeof first === "string" ? truncateToWidth(first.split("\n")[0], 40, "…") : "";
+				return typeof first === "string" ? truncateToWidth(first.split("\n")[0]!, 40, "…") : "";
 			}
 		}
 	}
 
-	function renderToolCallLines(toolCalls: ToolCallInfo[], theme: ExtensionContext["ui"]["theme"], width: number): string[] {
+	function renderToolCallLines(
+		toolCalls: ToolCallInfo[],
+		theme: ExtensionContext["ui"]["theme"],
+		width: number,
+	): string[] {
 		const lines: string[] = [];
 		for (const tc of toolCalls) {
 			const icon = tc.status === "running" ? "⚙" : tc.status === "error" ? "✗" : "✓";
@@ -461,22 +466,19 @@ export default function (pi: ExtensionAPI) {
 
 		const lines: string[] = [];
 		for (const item of thread) {
-			// User message
-			const userText = item.question.trim().split("\n")[0];
+			const userText = item.question.trim().split("\n")[0] ?? "";
 			lines.push(theme.fg("accent", theme.bold("You: ")) + truncateToWidth(userText, width - 5, "…"));
 			lines.push("");
 
-			// Assistant message rendered as markdown
 			const mdLines = renderMarkdownLines(item.answer, width);
 			lines.push(...mdLines);
 			lines.push("");
 		}
 
 		if (pendingQuestion) {
-			const userText = pendingQuestion.trim().split("\n")[0];
+			const userText = pendingQuestion.trim().split("\n")[0] ?? "";
 			lines.push(theme.fg("accent", theme.bold("You: ")) + truncateToWidth(userText, width - 5, "…"));
 
-			// Show tool calls inline
 			if (pendingToolCalls.length > 0) {
 				lines.push(...renderToolCallLines(pendingToolCalls, theme, width));
 			}
@@ -492,7 +494,6 @@ export default function (pi: ExtensionAPI) {
 			}
 		}
 
-		// Trim trailing empty line
 		while (lines.length > 0 && lines[lines.length - 1] === "") {
 			lines.pop();
 		}
@@ -563,7 +564,7 @@ export default function (pi: ExtensionAPI) {
 		}
 	}
 
-	async function resetThread(ctx: ExtensionContext | ExtensionCommandContext, persist = true): Promise<void> {
+	async function resetThread(_ctx: ExtensionContext | ExtensionCommandContext, persist = true): Promise<void> {
 		thread = [];
 		pendingQuestion = null;
 		pendingAnswer = "";
@@ -594,7 +595,7 @@ export default function (pi: ExtensionAPI) {
 		let lastResetIndex = -1;
 		for (let i = 0; i < branch.length; i++) {
 			const entry = branch[i];
-			if (entry.type === "custom" && entry.customType === BTW_RESET_TYPE) {
+			if (entry?.type === "custom" && entry.customType === BTW_RESET_TYPE) {
 				lastResetIndex = i;
 			}
 		}
@@ -618,19 +619,16 @@ export default function (pi: ExtensionAPI) {
 			return null;
 		}
 
+		const seededSessionManager = createSeededSessionManager(ctx, thread);
+
 		const { session } = await createAgentSession({
-			sessionManager: SessionManager.inMemory(),
+			cwd: ctx.cwd,
+			sessionManager: seededSessionManager,
 			model: ctx.model,
-			modelRegistry: ctx.modelRegistry as AgentSession["modelRegistry"],
 			thinkingLevel: pi.getThinkingLevel() as SessionThinkingLevel,
 			tools: ["read", "bash", "edit", "write"],
 			resourceLoader: createBtwResourceLoader(ctx),
 		});
-
-		const seedMessages = buildSeedMessages(ctx, thread);
-		if (seedMessages.length > 0) {
-			session.agent.state.messages = seedMessages as typeof session.agent.state.messages;
-		}
 
 		const unsubscribe = session.subscribe((event: AgentSessionEvent) => {
 			if (!sideBusy || !pendingQuestion) {
@@ -650,12 +648,12 @@ export default function (pi: ExtensionAPI) {
 					return;
 				}
 				case "tool_execution_start": {
-					const toolName = (event as { toolName?: string }).toolName ?? "unknown";
+					const toolName = event.toolName ?? "unknown";
 					try {
 						pendingToolCalls.push({
-							toolCallId: (event as { toolCallId?: string }).toolCallId ?? "",
+							toolCallId: event.toolCallId ?? "",
 							toolName,
-							args: formatToolArgs(toolName, (event as { args?: unknown }).args),
+							args: formatToolArgs(toolName, event.args),
 							status: "running",
 						});
 					} catch {
@@ -665,12 +663,13 @@ export default function (pi: ExtensionAPI) {
 					return;
 				}
 				case "tool_execution_end": {
-					const endToolName = (event as { toolName?: string }).toolName ?? "unknown";
-					const tc = pendingToolCalls.find(
-						(t) => t.toolName === endToolName && t.status === "running",
-					);
+					const tc =
+						(event.toolCallId
+							? pendingToolCalls.find((t) => t.toolCallId === event.toolCallId)
+							: undefined) ??
+						pendingToolCalls.find((t) => t.toolName === event.toolName && t.status === "running");
 					if (tc) {
-						tc.status = (event as { isError?: boolean }).isError ? "error" : "done";
+						tc.status = event.isError ? "error" : "done";
 					}
 					setOverlayStatus("Streaming side response...", true);
 					return;
@@ -707,7 +706,7 @@ export default function (pi: ExtensionAPI) {
 	}
 
 	async function ensureOverlay(ctx: ExtensionCommandContext | ExtensionContext): Promise<void> {
-		if (!ctx.hasUI) {
+		if (ctx.mode !== "tui") {
 			return;
 		}
 
@@ -724,10 +723,10 @@ export default function (pi: ExtensionAPI) {
 				return;
 			}
 			runtime.closed = true;
-			runtime.handle?.hide();
 			if (overlayRuntime === runtime) {
 				overlayRuntime = null;
 			}
+			// Finish via done() only — Pi owns overlay removal on ctx.ui.custom() overlays.
 			runtime.finish?.();
 		};
 		runtime.close = closeRuntime;
@@ -802,42 +801,31 @@ export default function (pi: ExtensionAPI) {
 			throw new Error("No active model selected.");
 		}
 
-		const auth = await ctx.modelRegistry.getApiKeyAndHeaders(model);
-		if (auth.ok === false) {
-			throw new Error(auth.error);
+		const response = await ctx.modelRegistry
+			.streamSimple(
+				model,
+				{
+					systemPrompt: BTW_SUMMARY_PROMPT,
+					messages: [
+						{
+							role: "user",
+							content: [{ type: "text", text: formatThread(items) }],
+							timestamp: Date.now(),
+						},
+					],
+				},
+				{ reasoning: undefined, signal: ctx.signal },
+			)
+			.result();
+
+		if (response.stopReason === "aborted") {
+			throw new Error("Summary request was aborted.");
+		}
+		if (response.stopReason === "error") {
+			throw new Error(response.errorMessage || "Summary request failed.");
 		}
 
-		const { session } = await createAgentSession({
-			sessionManager: SessionManager.inMemory(),
-			model,
-			modelRegistry: ctx.modelRegistry as AgentSession["modelRegistry"],
-			thinkingLevel: "off",
-			tools: [],
-			resourceLoader: createBtwResourceLoader(ctx, [BTW_SUMMARY_PROMPT]),
-		});
-
-		try {
-			await session.prompt(formatThread(items), { source: "extension" });
-			const response = getLastAssistantMessage(session);
-			if (!response) {
-				throw new Error("Summary finished without a response.");
-			}
-			if (response.stopReason === "aborted") {
-				throw new Error("Summary request was aborted.");
-			}
-			if (response.stopReason === "error") {
-				throw new Error(response.errorMessage || "Summary request failed.");
-			}
-
-			return extractText(response.content) || "(No summary generated)";
-		} finally {
-			try {
-				await session.abort();
-			} catch {
-				// Ignore abort errors during temporary session teardown.
-			}
-			session.dispose();
-		}
+		return extractText(response.content) || "(No summary generated)";
 	}
 
 	async function injectSummaryIntoMain(ctx: ExtensionContext | ExtensionCommandContext): Promise<void> {
@@ -973,12 +961,17 @@ export default function (pi: ExtensionAPI) {
 	}
 
 	pi.registerCommand("btw", {
-		description: "Open a simple BTW side-chat popover. `/btw <text>` asks immediately, `/btw` opens the side thread.",
+		description: "Open a BTW side-chat popover. `/btw <text>` asks immediately, `/btw` opens the side thread.",
 		handler: async (args, ctx) => {
+			if (ctx.mode !== "tui") {
+				notify(ctx, "/btw requires interactive TUI mode.", "error");
+				return;
+			}
+
 			const question = (args ?? "").trim();
 
 			if (!question) {
-				if (thread.length > 0 && ctx.hasUI) {
+				if (thread.length > 0) {
 					const choice = await ctx.ui.select("BTW side chat:", [
 						"Continue previous conversation",
 						"Start fresh",
@@ -993,7 +986,7 @@ export default function (pi: ExtensionAPI) {
 						setOverlayStatus("Ready");
 						await ensureOverlay(ctx);
 					}
-					// null = user cancelled (Esc), do nothing
+					// undefined = user cancelled (Esc), do nothing
 				} else {
 					await resetThread(ctx, true);
 					setOverlayStatus("Ready");

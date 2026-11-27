@@ -7,13 +7,16 @@ import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
  * Exported so other extensions (e.g. cache-ttl-timer.ts) can reuse the same
  * "actually works in VS Code's terminal" notification primitive instead of
  * ctx.ui.notify(), which does not reliably surface there.
+ *
+ * Subscribes to `agent_settled` rather than `agent_end` so retries,
+ * auto-compaction, and queued follow-up turns do not ring prematurely.
  */
 export const ringBell = (): void => {
 	process.stdout.write("\x07");
 };
 
 export default function notifyExtension(pi: ExtensionAPI) {
-	pi.on("agent_end", async () => {
+	pi.on("agent_settled", () => {
 		ringBell();
 	});
 }

@@ -29,12 +29,12 @@
  * Use `/todos` to bring up the visual todo manager or just let the LLM use them
  * naturally.
  */
-import { DynamicBorder, copyToClipboard, getMarkdownTheme, keyHint, type ExtensionAPI, type ExtensionContext, type Theme } from "@earendil-works/pi-coding-agent";
+import { CONFIG_DIR_NAME, DynamicBorder, copyToClipboard, getMarkdownTheme, type ExtensionAPI, type ExtensionContext, type KeybindingHints, type Theme } from "@earendil-works/pi-coding-agent";
 import { StringEnum } from "@earendil-works/pi-ai";
 import { Type } from "typebox";
 import path from "node:path";
 import fs from "node:fs/promises";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync } from "node:fs";
 import crypto from "node:crypto";
 import {
 	Container,
@@ -53,7 +53,7 @@ import {
 	visibleWidth,
 } from "@earendil-works/pi-tui";
 
-const TODO_DIR_NAME = ".pi/todos";
+const TODO_DIR_NAME = path.join(CONFIG_DIR_NAME, "todos");
 const TODO_PATH_ENV = "PI_TODO_PATH";
 const TODO_SETTINGS_NAME = "settings.json";
 const TODO_ID_PREFIX = "TODO-";
@@ -1150,40 +1150,6 @@ async function listTodos(todosDir: string): Promise<TodoFrontMatter[]> {
 	return sortTodos(todos);
 }
 
-function listTodosSync(todosDir: string): TodoFrontMatter[] {
-	let entries: string[] = [];
-	try {
-		entries = readdirSync(todosDir);
-	} catch {
-		return [];
-	}
-
-	const todos: TodoFrontMatter[] = [];
-	for (const entry of entries) {
-		if (!entry.endsWith(".md")) continue;
-		const id = entry.slice(0, -3);
-		const filePath = path.join(todosDir, entry);
-		try {
-			const content = readFileSync(filePath, "utf8");
-			const { frontMatter } = splitFrontMatter(content);
-			const parsed = parseFrontMatter(frontMatter, id);
-			todos.push({
-				id,
-				title: parsed.title,
-				tags: parsed.tags ?? [],
-				status: parsed.status,
-				created_at: parsed.created_at,
-				assigned_to_session: parsed.assigned_to_session,
-				parent_id: parsed.parent_id,
-			});
-		} catch {
-			// ignore
-		}
-	}
-
-	return sortTodos(todos);
-}
-
 function getTodoTitle(todo: TodoFrontMatter): string {
 	return todo.title || "(untitled)";
 }
@@ -1370,8 +1336,8 @@ function renderTodoDetail(theme: Theme, todo: TodoRecord, expanded: boolean): st
 	return lines.join("\n");
 }
 
-function appendExpandHint(theme: Theme, text: string): string {
-	return `${text}\n${theme.fg("dim", `(${keyHint("app.tools.expand", "to expand")})`)}`;
+function appendExpandHint(theme: Theme, text: string, keybindings: KeybindingHints): string {
+	return `${text}\n${theme.fg("dim", `(${keybindings.keyHint("app.tools.expand", "to expand")})`)}`;
 }
 
 async function ensureTodoExists(filePath: string, id: string): Promise<TodoRecord | null> {
@@ -1548,6 +1514,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 			"Title is the short summary; body is long-form markdown notes (update replaces, append adds). " +
 			"Todo ids are shown as TODO-<hex>; id parameters accept TODO-<hex> or raw hex. " +
 			"Claim tasks before working on them; close when complete.",
+		promptSnippet: `Manage persistent file-based todos in ${todosDirLabel}.`,
 		parameters: TodoParams,
 
 		async execute(_toolCallId, params, _signal, _onUpdate, ctx) {
@@ -1580,6 +1547,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: id required" }],
 							details: { action: "get", error: "id required" },
+							isError: true,
 						};
 					}
 					const validated = validateTodoId(params.id);
@@ -1587,6 +1555,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: validated.error }],
 							details: { action: "get", error: validated.error },
+							isError: true,
 						};
 					}
 					const normalizedId = validated.id;
@@ -1597,6 +1566,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: `Todo ${displayId} not found` }],
 							details: { action: "get", error: "not found" },
+							isError: true,
 						};
 					}
 					return {
@@ -1610,6 +1580,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: title required" }],
 							details: { action: "create", error: "title required" },
+							isError: true,
 						};
 					}
 
@@ -1620,6 +1591,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 							return {
 								content: [{ type: "text", text: "Invalid parent_id. Expected TODO-<hex>." }],
 								details: { action: "create", error: "invalid parent_id" },
+								isError: true,
 							};
 						}
 						normalizedParentId = parentValidation.id;
@@ -1647,6 +1619,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: result.error }],
 							details: { action: "create", error: result.error },
+							isError: true,
 						};
 					}
 
@@ -1661,6 +1634,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: id required" }],
 							details: { action: "update", error: "id required" },
+							isError: true,
 						};
 					}
 					const validated = validateTodoId(params.id);
@@ -1668,6 +1642,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: validated.error }],
 							details: { action: "update", error: validated.error },
+							isError: true,
 						};
 					}
 					const normalizedId = validated.id;
@@ -1683,6 +1658,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 								return {
 									content: [{ type: "text", text: "Invalid parent_id. Expected TODO-<hex>." }],
 									details: { action: "update", error: "invalid parent_id" },
+									isError: true,
 								};
 							}
 							normalizedParentId = parentValidation.id;
@@ -1694,6 +1670,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: `Todo ${displayId} not found` }],
 							details: { action: "update", error: "not found" },
+							isError: true,
 						};
 					}
 					const result = await withTodoLock(todosDir, normalizedId, ctx, async () => {
@@ -1719,6 +1696,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: result.error }],
 							details: { action: "update", error: result.error },
+							isError: true,
 						};
 					}
 
@@ -1734,6 +1712,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: id required" }],
 							details: { action: "append", error: "id required" },
+							isError: true,
 						};
 					}
 					const validated = validateTodoId(params.id);
@@ -1741,6 +1720,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: validated.error }],
 							details: { action: "append", error: validated.error },
+							isError: true,
 						};
 					}
 					const normalizedId = validated.id;
@@ -1750,6 +1730,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: `Todo ${displayId} not found` }],
 							details: { action: "append", error: "not found" },
+							isError: true,
 						};
 					}
 					const result = await withTodoLock(todosDir, normalizedId, ctx, async () => {
@@ -1766,6 +1747,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: result.error }],
 							details: { action: "append", error: result.error },
+							isError: true,
 						};
 					}
 
@@ -1781,6 +1763,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: id required" }],
 							details: { action: "claim", error: "id required" },
+							isError: true,
 						};
 					}
 					const result = await claimTodoAssignment(
@@ -1793,6 +1776,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: result.error }],
 							details: { action: "claim", error: result.error },
+							isError: true,
 						};
 					}
 					const updatedTodo = result as TodoRecord;
@@ -1807,6 +1791,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: id required" }],
 							details: { action: "release", error: "id required" },
+							isError: true,
 						};
 					}
 					const result = await releaseTodoAssignment(
@@ -1819,6 +1804,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: result.error }],
 							details: { action: "release", error: result.error },
+							isError: true,
 						};
 					}
 					const updatedTodo = result as TodoRecord;
@@ -1833,6 +1819,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: "Error: id required" }],
 							details: { action: "delete", error: "id required" },
+							isError: true,
 						};
 					}
 
@@ -1841,6 +1828,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: validated.error }],
 							details: { action: "delete", error: validated.error },
+							isError: true,
 						};
 					}
 					const result = await deleteTodo(todosDir, validated.id, ctx);
@@ -1848,6 +1836,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 						return {
 							content: [{ type: "text", text: result.error }],
 							details: { action: "delete", error: result.error },
+							isError: true,
 						};
 					}
 
@@ -1875,7 +1864,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 			return new Text(text, 0, 0);
 		},
 
-		renderResult(result, { expanded, isPartial }, theme) {
+		renderResult(result, { expanded, isPartial }, theme, context) {
 			const details = result.details as TodoToolDetails | undefined;
 			if (isPartial) {
 				return new Text(theme.fg("warning", "Processing..."), 0, 0);
@@ -1894,7 +1883,7 @@ export default function todosExtension(pi: ExtensionAPI) {
 				if (!expanded) {
 					const { closedTodos } = splitTodosByAssignment(details.todos);
 					if (closedTodos.length) {
-						text = appendExpandHint(theme, text);
+						text = appendExpandHint(theme, text, context);
 					}
 				}
 				return new Text(text, 0, 0);
@@ -1926,30 +1915,32 @@ export default function todosExtension(pi: ExtensionAPI) {
 				text = lines.join("\n");
 			}
 			if (!expanded) {
-				text = appendExpandHint(theme, text);
+				text = appendExpandHint(theme, text, context);
 			}
 			return new Text(text, 0, 0);
 		},
 	});
 
 	pi.registerCommand("todos", {
-		description: "List todos from .pi/todos",
+		description: `List todos from ${todosDirLabel}`,
 		handler: async (args, ctx) => {
 			const todosDir = getTodosDir(ctx.cwd);
 			const todos = await listTodos(todosDir);
 			const currentSessionId = ctx.sessionManager.getSessionId();
 			const searchTerm = (args ?? "").trim();
 
-			if (!ctx.hasUI) {
+			if (ctx.mode !== "tui") {
 				const text = formatTodoList(todos);
-				console.log(text);
+				if (ctx.hasUI) {
+					ctx.ui.notify(text, "info");
+				} else {
+					console.log(text);
+				}
 				return;
 			}
 
 			let nextPrompt: string | null = null;
-			let rootTui: TUI | null = null;
 			await ctx.ui.custom<void>((tui, theme, keybindings, done) => {
-				rootTui = tui;
 				let selector: TodoSelectorComponent | null = null;
 				let actionMenu: TodoActionMenuComponent | null = null;
 				let deleteConfirm: TodoDeleteConfirmComponent | null = null;
@@ -2209,7 +2200,6 @@ export default function todosExtension(pi: ExtensionAPI) {
 
 			if (nextPrompt) {
 				ctx.ui.setEditorText(nextPrompt);
-				rootTui?.requestRender();
 			}
 		},
 	});

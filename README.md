@@ -47,7 +47,6 @@ On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlink
 - `git:github.com/eggmasonvalue/pi-system-prompt-viewer`
 - `git:github.com/trefeon/pi-freeflow`
 - `git:github.com/monotykamary/pi-toggle-skills`
-- `git:github.com/patelparth3/pi-annotations`
 - `npm:agent-browser`
 - `git:github.com/vercel-labs/skills` (only `skills/find-skills`)
 - `git:github.com/anthropics/skills` (only `skills/skill-creator`)
@@ -66,11 +65,23 @@ agent-browser --version
 
 `agent-browser install` is a separate one-time per-machine browser/runtime setup step. The bootstrap reports the command; run it if needed.
 
-`/system-context` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`. Rerunning bootstrap installs that package and removes the older `git:github.com/jandrikus/pi-system-prompt` and `npm:pi-system-prompt` entries.
+`/system-context` comes from `git:github.com/eggmasonvalue/pi-system-prompt-viewer`.
 
-## Extension docs
+## Extensions
 
-- [Shake](docs/extensions/shake.md): `/shake` condenses a session without a summarizing model; `bash-description.ts` gives every bash call the description it keeps.
+| Extension | What it does | Docs / Notes |
+|---|---|---|
+| [`shake.ts`](extensions/shake.ts) & [`bash-description.ts`](extensions/bash-description.ts) | `/shake` deterministic compaction without a summarizing model; adds required `description` to `bash` calls | [Shake docs](docs/extensions/shake.md) |
+| [`annotate.ts`](extensions/annotate.ts) | `/annotate` (`Ctrl+Shift+A`) Markdown-formatted overlay to annotate spans + optional batch summary (`Ctrl+S` sends) | [Annotate docs](docs/extensions/annotate.md) |
+| [`btw.ts`](extensions/btw.ts) | `/btw` floating side-channel chat seeded with main conversation context, optional summary handoff | [BTW docs](docs/extensions/btw.md) |
+| [`todos.ts`](extensions/todos.ts) | File-based `todo` tool and `/todos` TUI browser with subtasks, locking, and GC | [Todos docs](docs/extensions/todos.md) |
+| [`ask-user-questions.ts`](extensions/ask-user-questions.ts) | `ask_user_questions` tool for batch-collecting answers with per-question Note fields | Model-only, sequential TUI prompt |
+| [`tavily-web.ts`](extensions/tavily-web.ts) | `search_web` and `extract_web` tools backed by Tavily | Requires `TAVILY_API_KEY` |
+| [`cache-ttl-timer.ts`](extensions/cache-ttl-timer.ts) | Right-aligned `belowEditor` prompt-cache status & expiry bell, aware of Pi's `cacheWarming` | Uses `model.promptCache` TTL |
+| [`session-context.ts`](extensions/session-context.ts) | Injects one-time visible date/OS/shell/git line-ending context on fresh sessions | Toggle via `/session-context on\|off\|status` |
+| [`vibe-spinner.ts`](extensions/vibe-spinner.ts) | Custom working messages and mode-themed spinner glyphs (`motorsport`, `basketball`, `other-sports`, `stocks`, `mixed`) | Switch via `/vibe-spinner <mode>` |
+| [`notify.ts`](extensions/notify.ts) | Rings terminal BEL (`\x07`) on `agent_settled` | Exports `ringBell` |
+| [`logo.ts`](extensions/logo.ts) | Rotating-pastel candle startup header, adapts to light/dark themes | State in `<agentDir>/logo-state.json` |
 
 ## Optional: quickly creating a Pi subset
 
@@ -100,9 +111,6 @@ pi-work() {
 
   [[ -f "$agent/git/github.com/monotykamary/pi-toggle-skills/toggle-skills.ts" ]] &&
     args+=(--extension "$agent/git/github.com/monotykamary/pi-toggle-skills/toggle-skills.ts")
-
-  [[ -f "$agent/git/github.com/patelparth3/pi-annotations/annotate.ts" ]] &&
-    args+=(--extension "$agent/git/github.com/patelparth3/pi-annotations/annotate.ts")
 
   # Re-enable work-repository skills only.
   [[ -d "$root/.agents/skills" ]] && args+=(--skill "$root/.agents/skills")
