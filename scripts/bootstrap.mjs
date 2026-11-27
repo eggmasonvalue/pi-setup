@@ -3,7 +3,7 @@
  * Install the Pi setup and its independently managed packages.
  * This script deliberately changes settings.packages,
  * settings.shellCommandPrefix, and configures allowScripts for agent-browser
- * in Pi's npm root.
+ * in Pi's npm root, then reconciles packages via `pi update --extensions`.
  */
 import { execFileSync } from "node:child_process";
 import { existsSync, lstatSync, mkdirSync, readFileSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
@@ -16,17 +16,6 @@ const npmDir = join(agentDir, "npm");
 const npmPackageJsonPath = join(npmDir, "package.json");
 const npmBin = join(npmDir, "node_modules", ".bin");
 const managedFiles = ["AGENTS.md", "APPEND_SYSTEM.md"];
-
-const managedSources = [
-  "git:github.com/eggmasonvalue/pi-setup",
-  "git:github.com/eggmasonvalue/pi-subagent",
-  "git:github.com/eggmasonvalue/pi-system-prompt-viewer",
-  "git:github.com/trefeon/pi-freeflow",
-  "git:github.com/monotykamary/pi-toggle-skills",
-  "npm:agent-browser",
-  "git:github.com/vercel-labs/skills",
-  "git:github.com/anthropics/skills",
-];
 
 // Sources previously managed by this setup. They are removed during the
 // settings merge but are not installed again during migration.
@@ -53,7 +42,16 @@ const desiredPackages = [
     prompts: [],
     themes: [],
   },
+  {
+    source: "git:github.com/mattpocock/skills",
+    extensions: [],
+    skills: ["skills/productivity/writing-for-agents", "skills/productivity/teach"],
+    prompts: [],
+    themes: [],
+  },
 ];
+
+const managedSources = desiredPackages.map(sourceOf);
 
 function sourceOf(entry) {
   return typeof entry === "string" ? entry : entry?.source;
@@ -61,11 +59,20 @@ function sourceOf(entry) {
 
 function runPi(args, env = {}) {
   console.log(`\n> pi ${args.join(" ")}`);
-  execFileSync("pi", args, {
+  const opts = {
     stdio: "inherit",
-    shell: process.platform === "win32",
     env: { ...process.env, ...env },
-  });
+  };
+  if (process.platform === "win32") {
+    const launcher = join(agentDir, "bin", "pi-launcher.js");
+    if (existsSync(launcher)) {
+      execFileSync(process.execPath, [launcher, ...args], opts);
+      return;
+    }
+    execFileSync("cmd.exe", ["/d", "/s", "/c", "pi", ...args], opts);
+    return;
+  }
+  execFileSync("pi", args, opts);
 }
 
 function mergeSettings() {
@@ -155,21 +162,18 @@ function ensureNpmAllowScripts() {
 function main() {
   console.log(`Configuring Pi under ${agentDir}`);
   ensureNpmAllowScripts();
-  for (const source of managedSources) {
-    // Vercel's repository has a dev-only `prepare: husky` hook that is
-    // unusable when Pi installs with devDependencies omitted. Its skills do
-    // not need repository lifecycle scripts.
-    const env = source === "git:github.com/vercel-labs/skills"
-      ? { npm_config_ignore_scripts: "true" }
-      : {};
-    runPi(["install", source], env);
-  }
   mergeSettings();
+  // Reconcile all configured packages in one pass (Pi installs missing git/npm
+  // sources concurrently). Pass npm_config_ignore_scripts because
+  // vercel-labs/skills defines a dev-only `prepare: husky` hook that fails on
+  // npm < 12 when devDependencies are omitted; agent-browser 0.45+ ships its
+  // native binary via platform optionalDependencies so it does not require
+  // postinstall scripts to run.
+  runPi(["update", "--extensions"], { npm_config_ignore_scripts: "true" });
   mkdirSync(npmBin, { recursive: true });
   for (const name of ["extensions", "skills", "prompts", "themes"]) removeOldResourceLink(name);
   for (const name of managedFiles) linkManagedFile(name);
   console.log("\nPi setup bootstrap complete.");
-  console.log("Run: pi update --extensions");
   console.log("One-time browser setup (if not already done): agent-browser install");
   console.log("Verify from Pi: agent-browser --version");
 }

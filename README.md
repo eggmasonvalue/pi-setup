@@ -21,12 +21,11 @@ Then add the following to the user npm configuration file shown by `npm config g
 ```ini
 min-release-age=7
 min-release-age-exclude[]=@earendil-works/pi-*
-legacy-peer-deps=true
 ```
 
-The first setting delays newly published registry packages. The trusted `@earendil-works/pi-*` namespace is exempt because Pi supplies those host packages itself; Git-distributed extensions may mention them as dev or peer dependencies even though they should not be installed into the extension tree. `legacy-peer-deps` prevents npm from auto-installing those host peers during Git package setup. Keep any existing registry authentication lines in that file unchanged.
+The first setting delays newly published registry packages. The trusted `@earendil-works/pi-*` namespace is exempt because Pi supplies those host packages itself. Pi passes `--legacy-peer-deps` automatically for managed npm and git package installs, so `legacy-peer-deps=true` is not needed in `.npmrc`. Keep any existing registry authentication lines in that file unchanged.
 
-`min-release-age` was added before the exclusion setting. npm 11.10.0 through 11.16.x therefore recognize `min-release-age` but warn that `min-release-age-exclude` is unknown and do not apply the exclusion. This is an npm version issue, not a Linux-specific `.npmrc` syntax issue; `min-release-age-exclude[]` is the supported repeated-value syntax in npm 11.17.0+.
+`min-release-age` was added before the exclusion setting. npm 11.10.0 through 11.16.x therefore recognize `min-release-age` but warn that `min-release-age-exclude` is unknown and do not apply the exclusion. This is an npm version issue, not a Linux-specific `.npmrc` syntax issue; `min-release-age-exclude[]` is the supported repeated-value syntax in npm 11.17.0+. (On npm 12+, dependency lifecycle scripts are also blocked by default unless approved via `allowScripts`.)
 
 These are per-machine npm settings; repeat this step on every machine.
 
@@ -36,7 +35,7 @@ From Git Bash, run:
 tmp=$(mktemp -d) && git clone --depth 1 https://github.com/eggmasonvalue/pi-setup "$tmp" && node "$tmp/scripts/bootstrap.mjs"; status=$?; rm -rf "$tmp";
 ```
 
-The bootstrap is safe to rerun. It configures `allowScripts` for `agent-browser` in Pi's npm root (`~/.pi/agent/npm/package.json`), installs the unpinned package sources, merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
+The bootstrap is safe to rerun. It configures `allowScripts` for `agent-browser` in Pi's npm root (`~/.pi/agent/npm/package.json`), merges only the managed package entries and Pi-managed npm `PATH` entry into `~/.pi/agent/settings.json`, reconciles all configured packages in one pass with `pi update --extensions`, removes old resource-directory links, and links the installed package's `AGENTS.md` and `APPEND_SYSTEM.md` into the global Pi directory, replacing existing links or files so the repository remains the single source of truth. It never modifies `auth.json`, `models.json`, provider/model settings, or UI preferences.
 
 On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlinks may require Developer Mode or a terminal with the `SeCreateSymbolicLinkPrivilege` privilege. The bootstrap stops with an actionable error if it cannot create either link.
 
@@ -50,6 +49,7 @@ On Windows, creating the managed `AGENTS.md` and `APPEND_SYSTEM.md` file symlink
 - `npm:agent-browser`
 - `git:github.com/vercel-labs/skills` (only `skills/find-skills`)
 - `git:github.com/anthropics/skills` (only `skills/skill-creator`)
+- `git:github.com/mattpocock/skills` (only `skills/productivity/writing-for-agents` and `skills/productivity/teach`)
 
 All sources intentionally omit versions, tags, and commit refs. Update everything with:
 
