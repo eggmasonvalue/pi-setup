@@ -1,9 +1,8 @@
 import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import {
-	Editor,
-	type EditorTheme,
 	type Focusable,
+	Input,
 	Key,
 	matchesKey,
 	Text,
@@ -70,10 +69,6 @@ interface UIResult {
 	cancelled: boolean;
 	cancelledAtIndex: number;
 	answers: Answer[];
-}
-
-function formatPrompt(q: Question): string {
-	return q.context ? `${q.question}\n(${q.context})` : q.question;
 }
 
 function isRequired(q: Question): boolean {
@@ -258,17 +253,6 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 
 			const result = await ctx.ui.custom<UIResult>(
 				(tui, theme, _kb, done) => {
-					const editorTheme: EditorTheme = {
-						borderColor: (s) => theme.fg("accent", s),
-						selectList: {
-							selectedPrefix: (t) => theme.fg("accent", t),
-							selectedText: (t) => theme.fg("accent", t),
-							description: (t) => theme.fg("muted", t),
-							scrollInfo: (t) => theme.fg("dim", t),
-							noMatch: (t) => theme.fg("warning", t),
-						},
-					};
-
 					const drafts: Draft[] = items.map(() => ({
 						answerText: "",
 						noteText: "",
@@ -285,57 +269,32 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 					let cachedLines: string[] | undefined;
 					let statusLine: { text: string; level: "info" | "warning" } | null = null;
 
-					const editor = new Editor(tui, editorTheme);
-					editor.disableSubmit = true;
-
-					let editorBinding: { questionIndex: number; field: "answer" | "note" } | null = null;
-
-					const isTextualAnswerQuestion = (q: Question): boolean => q.type === "inline";
+					let activeInput: Input | null = null;
+					let inputBinding: { questionIndex: number; field: "answer" | "note" } | null = null;
+					let inputActionHandled = false;
 
 					const desiredBinding = (): { questionIndex: number; field: "answer" | "note" } | null => {
 						const q = items[currentIndex]!;
 						if (focus === "note") return { questionIndex: currentIndex, field: "note" };
-						if (isTextualAnswerQuestion(q)) return { questionIndex: currentIndex, field: "answer" };
+						if (q.type === "inline") return { questionIndex: currentIndex, field: "answer" };
 						return null;
 					};
 
-					const saveEditorToDraft = () => {
-						if (!editorBinding) return;
-						const text = editor.getExpandedText();
-						const draft = drafts[editorBinding.questionIndex]!;
-						if (editorBinding.field === "answer") {
+					const saveInputToDraft = () => {
+						if (!inputBinding || !activeInput) return;
+						const text = activeInput.getValue();
+						const draft = drafts[inputBinding.questionIndex]!;
+						if (inputBinding.field === "answer") {
 							draft.answerText = text;
 						} else {
 							draft.noteText = text;
 						}
 					};
 
-					const bindEditor = () => {
-						const target = desiredBinding();
-
-						const isSameBinding =
-							target &&
-							editorBinding &&
-							target.questionIndex === editorBinding.questionIndex &&
-							target.field === editorBinding.field;
-
-						if (!isSameBinding) {
-							saveEditorToDraft();
-							editorBinding = target;
-							if (editorBinding) {
-								const draft = drafts[editorBinding.questionIndex]!;
-								const nextText = editorBinding.field === "answer" ? draft.answerText : draft.noteText;
-								editor.setText(nextText);
-							}
-						}
-
-						editor.focused = componentFocused && editorBinding !== null;
-					};
-
 					const invalidate = () => {
 						cachedWidth = undefined;
 						cachedLines = undefined;
-						editor.invalidate();
+						activeInput?.invalidate();
 					};
 
 					const refresh = () => {
@@ -363,24 +322,22 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 						}
 					};
 
-					const renderStaticBox = (text: string, width: number, emptyHint: string): string[] => {
-						const w = Math.max(8, width);
-						const out: string[] = [theme.fg("borderMuted", "─".repeat(w))];
+					const renderRule = (width: number, left?: string, right?: string): string => {
+						const dash = (n: number) => (n > 0 ? theme.fg("accent", "─".repeat(n)) : "");
+						if (!left && !right) return dash(width);
 
-						const body = text.trim().length > 0 ? text : theme.fg("dim", emptyHint);
-						const wrapped = wrapTextWithAnsi(body, w);
-						const maxLines = 6;
+						const rightPart = right ? ` ${right} ` : "";
+						const rightW = visibleWidth(rightPart);
+						const rightTail = right ? 1 : 0;
+						const leftLead = 1;
 
-						for (let i = 0; i < Math.min(maxLines, wrapped.length); i++) {
-							out.push(wrapped[i]!);
-						}
+						const maxLeftSpace = Math.max(0, width - leftLead - rightW - rightTail - 2);
+						const leftTrimmed = left && maxLeftSpace > 0 ? truncateToWidth(left, maxLeftSpace, "…") : "";
+						const leftPart = leftTrimmed ? ` ${leftTrimmed} ` : "";
+						const leftW = visibleWidth(leftPart);
 
-						if (wrapped.length > maxLines) {
-							out.push(theme.fg("dim", `… ${wrapped.length - maxLines} more line(s)`));
-						}
-
-						out.push(theme.fg("borderMuted", "─".repeat(w)));
-						return out;
+						const fill = Math.max(0, width - leftLead - leftW - rightW - rightTail);
+						return truncateToWidth(`${dash(leftLead)}${leftPart}${dash(fill)}${rightPart}${dash(rightTail)}`, width, "");
 					};
 
 					const answerMissing = (q: Question, draft: Draft): boolean => {
@@ -407,8 +364,17 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 
 					const materializeAllAnswers = (): Answer[] => items.map((q, i) => materializeAnswer(q, drafts[i]!));
 
+					const cancel = () => {
+						saveInputToDraft();
+						done({
+							cancelled: true,
+							cancelledAtIndex: currentIndex,
+							answers: materializeAllAnswers(),
+						});
+					};
+
 					const trySubmit = () => {
-						saveEditorToDraft();
+						saveInputToDraft();
 						const missing = firstIncomplete();
 						if (missing) {
 							currentIndex = missing.index;
@@ -417,7 +383,7 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 								level: "warning",
 								text: "Please complete all required answers before submit.",
 							};
-							bindEditor();
+							bindInput();
 							refresh();
 							return;
 						}
@@ -429,24 +395,94 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 						});
 					};
 
+					const advanceOrSubmit = () => {
+						saveInputToDraft();
+						const q = items[currentIndex]!;
+						if (answerMissing(q, drafts[currentIndex]!)) {
+							focus = "answer";
+							statusLine = {
+								level: "warning",
+								text:
+									q.type === "multiselect"
+										? "Select at least one option with Space (or 1-9)."
+										: "This question is required.",
+							};
+							bindInput();
+							refresh();
+							return;
+						}
+
+						if (currentIndex < items.length - 1) {
+							currentIndex += 1;
+							focus = "answer";
+							statusLine = null;
+							bindInput();
+							refresh();
+							return;
+						}
+
+						trySubmit();
+					};
+
+					const bindInput = () => {
+						const target = desiredBinding();
+
+						const isSameBinding =
+							target &&
+							inputBinding &&
+							target.questionIndex === inputBinding.questionIndex &&
+							target.field === inputBinding.field;
+
+						if (!isSameBinding) {
+							saveInputToDraft();
+							inputBinding = target;
+							if (inputBinding) {
+								const q = items[inputBinding.questionIndex]!;
+								const draft = drafts[inputBinding.questionIndex]!;
+								const isNote = inputBinding.field === "note";
+								const nextText = isNote ? draft.noteText : draft.answerText;
+								activeInput = new Input({
+									prompt: isNote ? theme.fg("accent", theme.bold("Note: ")) : theme.fg("accent", "▸ "),
+									placeholder: isNote
+										? (q.notePlaceholder ?? q.notePrompt ?? "(optional)")
+										: (q.placeholder ?? "Type your answer..."),
+									placeholderStyle: (t) => theme.fg("dim", t),
+								});
+								activeInput.setValue(nextText);
+								activeInput.onSubmit = () => {
+									inputActionHandled = true;
+									advanceOrSubmit();
+								};
+								activeInput.onEscape = () => {
+									inputActionHandled = true;
+									cancel();
+								};
+							} else {
+								activeInput = null;
+							}
+						}
+
+						if (activeInput) {
+							activeInput.focused = componentFocused;
+						}
+					};
+
 					const moveQuestion = (delta: number) => {
-						saveEditorToDraft();
-						currentIndex = Math.max(0, Math.min(items.length - 1, currentIndex + delta));
+						saveInputToDraft();
+						const next = Math.max(0, Math.min(items.length - 1, currentIndex + delta));
+						if (next === currentIndex) return;
+						currentIndex = next;
+						focus = "answer";
 						statusLine = null;
-						bindEditor();
+						bindInput();
 						refresh();
 					};
 
-					bindEditor();
+					bindInput();
 
 					const handleInput = (data: string) => {
 						if (matchesKey(data, Key.escape)) {
-							saveEditorToDraft();
-							done({
-								cancelled: true,
-								cancelledAtIndex: currentIndex,
-								answers: materializeAllAnswers(),
-							});
+							cancel();
 							return;
 						}
 
@@ -466,10 +502,10 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 						}
 
 						if (matchesKey(data, Key.tab) || matchesKey(data, Key.shift("tab"))) {
-							saveEditorToDraft();
+							saveInputToDraft();
 							focus = focus === "answer" ? "note" : "answer";
 							statusLine = null;
-							bindEditor();
+							bindInput();
 							refresh();
 							return;
 						}
@@ -500,7 +536,7 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 								return;
 							}
 
-							if (matchesKey(data, Key.enter) || matchesKey(data, Key.space)) {
+							if (matchesKey(data, Key.space)) {
 								const cursor = optionCursor[currentIndex]!;
 								if (q.type === "multiselect") {
 									if (d.selectedIndices.includes(cursor)) {
@@ -508,16 +544,19 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 									} else {
 										d.selectedIndices = [...d.selectedIndices, cursor].sort((a, b) => a - b);
 									}
-									statusLine = null;
-									refresh();
-									return;
+								} else {
+									d.selectedIndex = cursor;
 								}
-
-								d.selectedIndex = cursor;
 								statusLine = null;
-								focus = "note";
-								bindEditor();
 								refresh();
+								return;
+							}
+
+							if (matchesKey(data, Key.enter)) {
+								if (q.type === "select") {
+									d.selectedIndex = optionCursor[currentIndex]!;
+								}
+								advanceOrSubmit();
 								return;
 							}
 
@@ -552,65 +591,62 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 							return;
 						}
 
-						bindEditor();
-						if (editorBinding) {
-							editor.handleInput(data);
-							saveEditorToDraft();
-							statusLine = null;
-							refresh();
+						bindInput();
+						if (activeInput) {
+							inputActionHandled = false;
+							activeInput.handleInput(data);
+							if (!inputActionHandled) {
+								saveInputToDraft();
+								statusLine = null;
+								refresh();
+							}
 						}
 					};
 
 					const render = (width: number): string[] => {
 						if (cachedLines && cachedWidth === width) return cachedLines;
 
-						bindEditor();
+						bindInput();
 
 						const renderWidth = Math.max(20, width);
 						const lines: string[] = [];
 						const q = items[currentIndex]!;
 						const d = drafts[currentIndex]!;
 
-						lines.push(theme.fg("accent", "─".repeat(renderWidth)));
-						addWrappedWithPrefix(lines, " ", theme.fg("accent", theme.bold(title)), renderWidth);
+						const progress = items.length > 1 ? theme.fg("muted", `${currentIndex + 1}/${items.length}`) : undefined;
+						lines.push(renderRule(renderWidth, theme.fg("accent", theme.bold(title)), progress));
+
 						if (description) {
 							addWrappedWithPrefix(lines, " ", theme.fg("muted", description), renderWidth);
 						}
 
-						const completedCount = items.filter((_x, i) => isComplete(i)).length;
-						addWrappedWithPrefix(
-							lines,
-							" ",
-							theme.fg("dim", `Complete: ${completedCount}/${items.length}`),
-							renderWidth,
-						);
-
-						const tabs: string[] = [];
-						for (let i = 0; i < items.length; i++) {
-							const item = items[i]!;
-							const active = i === currentIndex;
-							const complete = isComplete(i);
-							const token = ` ${complete ? "■" : "□"} ${questionLabel(item, i)} `;
-							const styled = active
-								? theme.bg("selectedBg", theme.fg("text", token))
-								: theme.fg(complete ? "success" : "muted", token);
-							tabs.push(styled);
+						if (items.length > 1) {
+							const tabs: string[] = [];
+							for (let i = 0; i < items.length; i++) {
+								const item = items[i]!;
+								const active = i === currentIndex;
+								const complete = isComplete(i);
+								const token = ` ${complete ? "■" : "□"} ${questionLabel(item, i)} `;
+								const styled = active
+									? theme.bg("selectedBg", theme.fg("text", token))
+									: theme.fg(complete ? "success" : "muted", token);
+								tabs.push(styled);
+							}
+							addWrappedWithPrefix(lines, " ", tabs.join(" "), renderWidth);
 						}
-						addWrappedWithPrefix(lines, " ", tabs.join(" "), renderWidth);
 
-						lines.push("");
-						addWrappedWithPrefix(
-							lines,
-							" ",
-							theme.fg("accent", `Question ${currentIndex + 1}/${items.length} • ${q.type}`),
-							renderWidth,
-						);
-						addWrappedWithPrefix(lines, " ", theme.fg("text", formatPrompt(q)), renderWidth);
+						if (description || items.length > 1) {
+							lines.push("");
+						}
 
-						lines.push("");
-						const answerHeader =
-							focus === "answer" ? theme.fg("accent", theme.bold("Answer")) : theme.fg("muted", "Answer");
-						addWrappedWithPrefix(lines, " ", answerHeader, renderWidth);
+						const questionLine = isRequired(q)
+							? theme.fg("text", theme.bold(q.question))
+							: `${theme.fg("text", theme.bold(q.question))} ${theme.fg("dim", "[optional]")}`;
+						addWrappedWithPrefix(lines, " ", questionLine, renderWidth);
+
+						if (q.context) {
+							addWrappedWithPrefix(lines, "   ", theme.fg("muted", q.context), renderWidth);
+						}
 
 						if (q.type === "select" || q.type === "multiselect") {
 							const opts = getOptionsForQuestion(q);
@@ -618,38 +654,36 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 								const opt = opts[i]!;
 								const cursor = focus === "answer" && optionCursor[currentIndex] === i;
 								const selected = q.type === "multiselect" ? d.selectedIndices.includes(i) : d.selectedIndex === i;
-								const prefix = cursor ? theme.fg("accent", "> ") : "  ";
-								const marker = selected ? "●" : "○";
+								const prefix = cursor ? theme.fg("accent", " ▸ ") : "   ";
+								const marker = q.type === "multiselect" ? (selected ? "☑" : "☐") : selected ? "●" : "○";
 								const color = cursor ? "accent" : selected ? "success" : "text";
 								addWrappedWithPrefix(lines, prefix, theme.fg(color, `${marker} ${i + 1}. ${opt.label}`), renderWidth);
 							}
-
-							if (!isRequired(q)) {
-								addWrappedWithPrefix(
-									lines,
-									" ",
-									theme.fg("dim", "Optional: Backspace/Delete clears selection"),
-									renderWidth,
-								);
-							}
+						} else if (focus === "answer" && activeInput) {
+							const [row] = activeInput.render(Math.max(10, renderWidth - 1));
+							lines.push(` ${row ?? ""}`);
 						} else {
-							const answerBlock =
-								focus === "answer" && editorBinding?.field === "answer"
-									? editor.render(Math.max(8, renderWidth - 2))
-									: renderStaticBox(d.answerText, Math.max(8, renderWidth - 2), q.placeholder ?? "(no answer yet)");
-							for (const row of answerBlock) lines.push(` ${row}`);
+							const preview =
+								d.answerText.trim().length > 0
+									? theme.fg("text", d.answerText)
+									: theme.fg("dim", q.placeholder ?? "(no answer yet)");
+							lines.push(truncateToWidth(` ${theme.fg("muted", "▸ ")}${preview}`, renderWidth, "…"));
 						}
 
 						lines.push("");
-						const noteLabel = focus === "note" ? theme.fg("accent", theme.bold("Note")) : theme.fg("muted", "Note");
-						const noteHint = q.notePrompt ?? q.notePlaceholder ?? "assumptions, caveats, or extra context (optional)";
-						addWrappedWithPrefix(lines, " ", `${noteLabel} ${theme.fg("dim", `— ${noteHint}`)}`, renderWidth);
 
-						const noteBlock =
-							focus === "note" && editorBinding?.field === "note"
-								? editor.render(Math.max(8, renderWidth - 2))
-								: renderStaticBox(d.noteText, Math.max(8, renderWidth - 2), q.notePlaceholder ?? "(optional note)");
-						for (const row of noteBlock) lines.push(` ${row}`);
+						if (focus === "note" && activeInput) {
+							const [row] = activeInput.render(Math.max(10, renderWidth - 1));
+							lines.push(` ${row ?? ""}`);
+						} else {
+							const noteEmptyHint =
+								q.notePrompt || q.notePlaceholder
+									? `${q.notePrompt ?? q.notePlaceholder} (Tab)`
+									: "(optional — Tab to add)";
+							const noteBody =
+								d.noteText.trim().length > 0 ? theme.fg("text", d.noteText) : theme.fg("dim", noteEmptyHint);
+							lines.push(truncateToWidth(` ${theme.fg("muted", "Note: ")}${noteBody}`, renderWidth, "…"));
+						}
 
 						if (statusLine) {
 							addWrappedWithPrefix(
@@ -660,21 +694,26 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 							);
 						}
 
-						const modeHint =
-							q.type === "select" || q.type === "multiselect"
-								? q.type === "multiselect"
-									? "↑↓ move option • Enter/Space toggle • 1-9 quick toggle"
-									: "↑↓ move option • Enter/Space choose • 1-9 quick choose"
-								: "Shift+Enter newline (in editor)";
-						addWrappedWithPrefix(lines, " ", theme.fg("dim", modeHint), renderWidth);
-						addWrappedWithPrefix(
-							lines,
-							" ",
-							theme.fg("dim", "Alt+←/→ or Ctrl+P/N question • Tab switch Answer/Note • Ctrl+S submit • Esc cancel"),
-							renderWidth,
-						);
+						const isLast = currentIndex === items.length - 1;
+						const multi = items.length > 1;
+						const enterLabel = isLast ? "Enter submit" : "Enter next";
+						const hints: string[] = [];
 
-						lines.push(theme.fg("accent", "─".repeat(renderWidth)));
+						if (focus === "answer" && q.type === "select") {
+							hints.push(multi ? "↑↓ pick" : "↑↓/1-9 pick", "Space select", enterLabel, "Tab note");
+							if (!isRequired(q) && d.selectedIndex !== null) hints.push("Del clear");
+						} else if (focus === "answer" && q.type === "multiselect") {
+							hints.push("Space/1-9 toggle", enterLabel, "Tab note");
+							if (!isRequired(q) && d.selectedIndices.length > 0) hints.push("Del clear");
+						} else {
+							hints.push(enterLabel, focus === "note" ? "Tab answer" : "Tab note");
+						}
+
+						if (multi) hints.push("^P/^N");
+						if (!isLast) hints.push("^S submit");
+						hints.push(multi && !isLast ? "Esc" : "Esc cancel");
+
+						lines.push(renderRule(renderWidth, theme.fg("dim", hints.join(" • "))));
 
 						cachedWidth = width;
 						cachedLines = lines;
@@ -691,7 +730,7 @@ export default function askUserQuestionsExtension(pi: ExtensionAPI) {
 						},
 						set focused(value: boolean) {
 							componentFocused = value;
-							editor.focused = value && editorBinding !== null;
+							if (activeInput) activeInput.focused = value;
 						},
 						render,
 						invalidate,
