@@ -5,7 +5,7 @@
 Two extensions work together:
 
 - [`extensions/shake.ts`](../../extensions/shake.ts) provides the `/shake` command and the compaction it triggers.
-- [`extensions/bash-description.ts`](../../extensions/bash-description.ts) makes every bash call carry a short description, which becomes that call's record.
+- [`extensions/tool-descriptions.ts`](../../extensions/tool-descriptions.ts) makes every `bash` and `codemode` call carry a short description, which becomes that call's record.
 
 ## How it works
 
@@ -61,7 +61,7 @@ The summary is the call's main argument:
 
 | Tool | Summary |
 |---|---|
-| `bash` | The call's `description` (the command if it has none) |
+| `bash`, `codemode` | The call's `description` |
 | Tools with a `path`, `file`, `filePath`, or `paths` argument | The path(s) |
 | Others | `command`, `query`, or `action` if present, otherwise the arguments as JSON |
 
@@ -76,17 +76,17 @@ The outcome is left out when the call succeeded with output, because that is the
 | `error` | Any other tool failure |
 | `no result` | The call never got a result (for example, the session was interrupted mid-call) |
 
-## Bash descriptions
+## Tool descriptions
 
-`bash-description.ts` replaces the built-in `bash` tool with the same tool plus one required argument, `description`: what the command does, in 5–10 words. The model is told why: long conversations may later be abridged, and the description is then the only record of the call. That makes it a note to its future self, which pushes it to be specific.
+`tool-descriptions.ts` replaces the built-in `bash` and `codemode` tools with the same tools plus one required argument, `description`: what the command or script does, in 5–10 words. The model is told why: long conversations may later be abridged, and the description is then the only record of the call. That makes it a note to its future self, which pushes it to be specific.
 
 The extension is always on and changes nothing else:
 
-- **Execution:** commands run through Pi's own bash implementation, using the `shellCommandPrefix` and `shellPath` settings.
-- **Display:** the description appears as a `# comment` line above the command, which also makes long command chains easy to follow as they happen.
-- **Outcome:** the exit code is not saved in the session file, so the tool records the outcome word itself in the result's `details.outcome`. Shake uses any tool's `details.outcome` this way.
+- **Execution:** `bash` runs through Pi's own bash implementation (using `shellCommandPrefix` and `shellPath`), and `codemode` delegates to Pi's built-in `codemode` extension (keeping `defaultActive: false` and switching constrained sampling to strict JSON Schema since grammar mode only supports a single parameter).
+- **Display:** the description appears as a `# comment` line above the call, which also makes long command and script chains easy to follow as they happen.
+- **Outcome:** `bash` exit codes are not saved in the session file, so the tool records the outcome word itself in the result's `details.outcome`. Shake uses any tool's `details.outcome` this way.
 
 ## Maintaining
 
-- **The summary is read by models that know nothing about Shake.** Its opening paragraph and the bash `description` help text must make sense to a reader with no context. Don't mention "Shake", "pruning", or other internal terms in them.
+- **The summary is read by models that know nothing about Shake.** Its opening paragraph and the `description` help text must make sense to a reader with no context. Don't mention "Shake", "pruning", or other internal terms in them.
 - Existing compactions are not rewritten. If the format changes, earlier summaries keep the old wording.

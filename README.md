@@ -71,7 +71,7 @@ agent-browser --version
 
 | Extension | What it does | Docs / Notes |
 |---|---|---|
-| [`shake.ts`](extensions/shake.ts) & [`bash-description.ts`](extensions/bash-description.ts) | `/shake` deterministic compaction without a summarizing model; adds required `description` to `bash` calls | [Shake docs](docs/extensions/shake.md) |
+| [`shake.ts`](extensions/shake.ts) & [`tool-descriptions.ts`](extensions/tool-descriptions.ts) | `/shake` deterministic compaction without a summarizing model; adds required `description` to `bash` and `codemode` calls | [Shake docs](docs/extensions/shake.md) |
 | [`annotate.ts`](extensions/annotate.ts) | `/annotate` (`Ctrl+Shift+A`) Markdown-formatted overlay to annotate spans + optional batch summary (`Ctrl+S` sends) | [Annotate docs](docs/extensions/annotate.md) |
 | [`btw.ts`](extensions/btw.ts) | `/btw` floating side-channel chat seeded with main conversation context, optional summary handoff | [BTW docs](docs/extensions/btw.md) |
 | [`todos.ts`](extensions/todos.ts) | File-based `todo` tool and `/todos` TUI browser with subtasks, locking, and GC | [Todos docs](docs/extensions/todos.md) |

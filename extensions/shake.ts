@@ -19,9 +19,9 @@ function record(tool: string, summary: string, outcome: string | undefined): str
 	return `[${tool}]${summary ? ` ${summary}` : ""}${outcome ? ` → ${outcome}` : ""}`;
 }
 
-function summarizeArgs(name: string, args: Record<string, unknown> | undefined): string {
+function summarizeArgs(args: Record<string, unknown> | undefined): string {
 	if (!args || typeof args !== "object") return "";
-	if (name === "bash" && typeof args.description === "string") return args.description;
+	if (typeof args.description === "string") return args.description;
 	const path = ["path", "file", "filePath"].find((key) => typeof args[key] === "string");
 	if (path) return String(args[path]);
 	if (Array.isArray(args.paths)) return args.paths.join(", ");
@@ -74,7 +74,7 @@ export function condense(messages: AgentMessage[], { thinking = false }: Condens
 				line("Assistant", textOf(message.content));
 				const calls = message.content.flatMap((block) =>
 					block.type === "toolCall"
-						? [record(block.name, summarizeArgs(block.name, block.arguments), outcomes.has(block.id) ? outcomes.get(block.id) : "no result")]
+						? [record(block.name, summarizeArgs(block.arguments), outcomes.has(block.id) ? outcomes.get(block.id) : "no result")]
 						: [],
 				);
 				line("Tool calls", calls.join("; "));
