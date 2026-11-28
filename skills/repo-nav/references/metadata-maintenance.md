@@ -28,11 +28,25 @@ information exposed.
 GitHub's native archived flag is authoritative for archival state. Do not use
 `abandoned` as a topic.
 
+## Fork scope
+
+- **Pure / backup forks:** do not add topics or rewrite descriptions for untouched
+  upstream mirrors (`ahead_by == 0`, no owner-authored branches, and no existing
+  owner curation). Leaving `topics` empty keeps them out of the topic vocabulary
+  and routing index.
+- **Modified forks:** maintain metadata normally when the owner has commits on
+  the default branch or custom branches; mention the fork's custom focus or
+  extension over upstream when it aids routing.
+- **Curated archive forks:** if the owner intentionally catalogs an unmodified
+  fork as a reference, label it clearly (e.g. `reference archive`) with 1–3
+  topics.
+
 ## New-repository workflow
 
 1. Confirm the ownership boundary and canonical `OWNER/REPO`.
 2. Fetch the repository's current description, topics, visibility, fork state,
-   and archived state.
+   and archived state. If `fork` is true, verify it has owner commits or
+   intentional curation before editing metadata.
 3. Inspect only the cheapest local evidence needed: the README introduction,
    top-level structure, and relevant manifest or context file.
 4. Aggregate the account's existing topic vocabulary and usage counts before
