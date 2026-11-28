@@ -18,6 +18,7 @@ For the first pass, build a compact inventory of the relevant repositories and r
 - repository name
 - repository description
 - archived status when it changes whether a repository should be considered
+- fork status, separating pure backup forks from modified or curated forks
 
 Treat topic matches as strongest, then use name/description matches and clearly labeled inferences. Before filtering, aggregate the topic vocabulary and usage counts across the inventory. The `gh` CLI's repository-list output may not expose topics reliably; use the GitHub API and aggregate each repository's `topics` array when necessary:
 
@@ -26,6 +27,13 @@ gh api --paginate \
   'user/repos?visibility=all&affiliation=owner&per_page=100' \
   --jq '.[].topics[]?' | sort | uniq -c | sort -nr
 ```
+
+### Handling forks
+
+GitHub exposes only a single `fork` boolean, which conflates untouched backup mirrors with actively maintained forks. Unless the task specifically asks about backups or upstream mirrors, **exclude pure forks** from discovery and metadata audits while keeping **modified** and **curated** forks in scope:
+
+- **Pure fork (skip by default):** `fork == true`, empty `topics`, no owner-authored commits (`ahead_by == 0` on the default branch and no owner-authored extra branches). In a fast REST pass, `fork == true`, `topics == []`, and `pushed_at <= created_at` is a cheap proxy; if `pushed_at > created_at` or extra branches exist, confirm against `parent` via GraphQL / `repos/{parent}/compare/{parent_default}...{owner}:{default}` before excluding.
+- **Modified or curated fork (keep in scope):** any fork with owner commits (on the default branch or custom branches) or intentional owner curation (custom topics/description, such as a reference archive).
 
 Do not read every README during discovery. For creating or repairing metadata, follow [metadata-maintenance.md](references/metadata-maintenance.md).
 
